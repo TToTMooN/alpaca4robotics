@@ -1,0 +1,34 @@
+### Task 1: Pick up block A using the robot's parallel gripper and place it on top of block B.\n
+### Task 2: Swap the positions of block A and block B on the table.\n
+### Task 3: Identify the block with the smaller size and push it off the table.\n
+### Task 4: Locate the block with the color that is more similar to red and lift it for 10 seconds.\n
+### Task 5: Carefully stack block B on top of block A without causing any block to topple.\n
+### Task 6: Precisely rearrange the blocks to be exactly 30 cm apart from each other.\n
+### Task 7: Pick up both blocks simultaneously and swap their locations.\n
+### Task 8: Move block A to the edge of the table, then move block B to the same edge.\n
+### Task 9: Identify the block that is farthest from the robot and bring it closer.\n
+### Task 10: Tilt block A to a 45 degree angle using block B without lifting either block off the table."
+
+
+
+### Task 1: Pick up block A and stack it on top of block B without causing it to topple*.\n\n
+### Task 2: Use the gripper to move block B to exactly 10 cm away from its initial position*.\n\n
+### Task 3: Arrange the two blocks such that the larger block is nearer to the robot*.\n\n
+### Task 4: Gently pick up and rotate block A by 90 degrees without dropping it*.\n\n
+### Task 5: Rapidly pick up block B and place it 20 cm away from its original position*.\n\n
+### Task 6: Pick up block A and place it exactly in the center of block B*.\n\n
+### Task 7: Locate and pick up the smaller block without causing any movement to the larger block*.\n\n
+### Task 8: Using the least amount of force, pick up and stack the lighter block on top of the heavier block*.\n\n
+### Task 9: Reposition block A so that the blocks form a straight line with the robot*.\n\n
+### Task 10: Simultaneously hold both blocks without letting either block drop*.'
+
+### Task 1: Pick up block B and place it directly next to block A without altering the initial orientation of block A*.\n
+### Task 2: Manipulate block A and block B such that they are on the opposite sides of the table*.\n
+### Task 3: Maximize the height by stacking the two blocks on top of each other*.\n
+### Task 4: Pick up the lighter block and place it on the ground beneath the table without touching the heavier block.\n
+### Task 5: Rotate block A 90 degrees without moving it from its initial position*.\n
+### Task 6: Identify which block is denser, then lift that block and place it on top of the other block*.\n
+### Task 7: Reorient blocks A and B such that they are at 180 degrees from each other with the heaviest block on the table and the lighter block on top of it*.\n
+### Task 8: Move both block A and block B to the corners of the table.\n
+### Task 9: Arrange blocks A and B side by side with a gap of at least 5cm between them*.\n
+### Task 10: Determine which block is taller and place the shorter block on top of the taller block*.
