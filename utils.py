@@ -15,10 +15,10 @@ import copy
 
 StrOrOpenAIObject = Union[str, openai_object.OpenAIObject]
 
-openai_org = os.getenv("OPENAI_ORG")
-if openai_org is not None:
-    openai.organization = openai_org
-    logging.warning(f"Switching to organization: {openai_org} for OAI API key.")
+# openai_org = os.getenv("OPENAI_ORG")
+# if openai_org is not None:
+#     openai.organization = openai_org
+#     logging.warning(f"Switching to organization: {openai_org} for OAI API key.")
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 @dataclasses.dataclass
@@ -35,6 +35,16 @@ class OpenAIDecodingArguments(object):
     logprobs: Optional[int] = None
     echo: bool = False
 
+@dataclasses.dataclass
+class OpenAIChatDecodingArguments(object):
+    max_tokens: int = 1280
+    temperature: float = 1.0
+    top_p: float = 1.0
+    n: int = 1
+    stream: bool = False
+    stop: Optional[Sequence[str]] = None
+    presence_penalty: float = 0.0
+    frequency_penalty: float = 0.0
 
 def openai_completion(
     prompts: Union[str, Sequence[str], Sequence[dict[str, str]], dict[str, str]],
@@ -134,9 +144,7 @@ def openai_chatcompletion(
     decoding_args: OpenAIDecodingArguments,
     model_name="gpt-4",
     sleep_time=2,
-    batch_size=1,
     max_instances=sys.maxsize,
-    max_batches=sys.maxsize,
     return_text=False,
     **decoding_kwargs,
 ) -> Union[StrOrOpenAIObject, Sequence[StrOrOpenAIObject], Sequence[Sequence[StrOrOpenAIObject]],]:
@@ -167,28 +175,17 @@ def openai_chatcompletion(
     if is_single_prompt:
         prompts = [prompts]
 
-    if max_batches < sys.maxsize:
-        logging.warning(
-            "`max_batches` will be deprecated in the future, please use `max_instances` instead."
-            "Setting `max_instances` to `max_batches * batch_size` for now."
-        )
-        max_instances = max_batches * batch_size
 
     prompts = prompts[:max_instances]
+    print("###", prompts)
     num_prompts = len(prompts)
-    prompt_batches = [
-        prompts[batch_id * batch_size : (batch_id + 1) * batch_size]
-        for batch_id in range(int(math.ceil(num_prompts / batch_size)))
-    ]
-
-    completions = []
-    for batch_id, prompt_batch in tqdm.tqdm(
-        enumerate(prompt_batches),
-        desc="prompt_batches",
-        total=len(prompt_batches),
+    chatcompletions = []
+    for id, prompt in tqdm.tqdm(
+        enumerate(prompts),
+        desc="prompts",
+        total=len(prompts),
     ):
         batch_decoding_args = copy.deepcopy(decoding_args)  # cloning the decoding_args
-
         while True:
             try:
                 shared_kwargs = dict(
@@ -196,13 +193,13 @@ def openai_chatcompletion(
                     **batch_decoding_args.__dict__,
                     **decoding_kwargs,
                 )
-                completion_batch = openai.ChatCompletion.create(
-                    messages=prompt_batch, **shared_kwargs)
-                choices = completion_batch.choices
+                chat_response = openai.ChatCompletion.create(
+                    messages=prompt, **shared_kwargs)
+                choices = chat_response.choices
 
                 for choice in choices:
-                    choice["total_tokens"] = completion_batch.usage.total_tokens
-                completions.extend(choices)
+                    choice["total_tokens"] = chat_response.usage.total_tokens
+                chatcompletions.extend(choices)
                 break
             except openai.error.OpenAIError as e:
                 logging.warning(f"OpenAIError: {e}.")
@@ -214,14 +211,11 @@ def openai_chatcompletion(
                     time.sleep(sleep_time)  # Annoying rate limit on requests.
 
     if return_text:
-        completions = [completion.text for completion in completions]
-    if decoding_args.n > 1:
-        # make completions a nested list, where each entry is a consecutive decoding_args.n of original entries.
-        completions = [completions[i : i + decoding_args.n] for i in range(0, len(completions), decoding_args.n)]
+        chatcompletions = [completion['message']['content'] for completion in chatcompletions]
     if is_single_prompt:
         # Return non-tuple if only 1 input and 1 generation.
-        (completions,) = completions
-    return completions
+        (chatcompletions,) = chatcompletions
+    return chatcompletions
 
 def _make_w_io_base(f, mode: str):
     if not isinstance(f, io.IOBase):

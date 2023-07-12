@@ -9,7 +9,7 @@ Contents in the {} are the names of the objects in the environment.
 Come up with 10 different tasks for the robot to perform.
 
 Generate the response following the template below:
-### Task {i}: {task description}
+###Task {i}: {task description}
 where {i} is the task number and {task description} is the task description.
 
 

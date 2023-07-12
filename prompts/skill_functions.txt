@@ -1,0 +1,27 @@
+```
+def set_l2_distance_reward(name_obj_A, name_obj_B)
+```
+where name_obj_A and name_obj_B are selected from ['gripper', 'cube', 'apple', 'box_left_side', 'box_right_side', 'box_center'].
+This term sets a reward for minimizing l2_distance between name_obj_A and name_obj_B so they get closer to each other.
+
+```
+def set_obj_orientation_reward(name_obj, x_axis_rotation_radians, z_axis_rotation_radians)
+```
+this term encourages the orientation of name_obj to be close to the target.
+
+```
+def execute_plan(duration=2)
+```
+This function sends the parameters to the robot and execute the plan for `duration` seconds, default to be 2
+
+```
+def set_obj_position_reward(name_obj, x_offset, y_offset, z_height)
+```
+this term encourages the position of name_obj to be close to the specified target position.
+
+```
+def reset_reward()
+```
+This function resets the reward to default values.
+
+This is the first plan for a new task.
