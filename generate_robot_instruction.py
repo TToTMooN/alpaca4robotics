@@ -23,20 +23,21 @@ import utils
 
 import fire
 
+
 def encode_task_generation_prompt(prompt_file_name="./prompts/robot_task_prompt.txt"):
     """Encode prompt for task generation into a single string."""
     prompt = open(prompt_file_name).read() + "\n"
     # TODO: add seeded tasks
     # make it gpt-4 format
-    message = [
-        {"role": "user", "content": prompt}]
+    message = [{"role": "user", "content": prompt}]
     return message
+
 
 def post_process_task_response(response):
     if response is None:
         return []
     ### Parse the response into list of tasks ###
-    raw_tasks = response['message']['content']
+    raw_tasks = response["message"]["content"]
     raw_tasks = re.split("###", raw_tasks)
     print(raw_tasks)
     tasks = []
@@ -64,6 +65,7 @@ def post_process_task_response(response):
             continue
         tasks.append({"task": task})
     return tasks
+
 
 def generate_task_data(
     output_dir="./gpt4_generation/",
@@ -122,16 +124,55 @@ def generate_task_data(
         utils.jdump(machine_task_data, os.path.join(output_dir, "task_regen.json"))
 
 
-# def encode_instruct_prompt(task_description, prompt_file_name="./prompts/robot_instruct_prompt.txt"):
-#     """Encode prompt for instruction following pairs into a single string."""
-#     prompt = open(prompt_file_name).read() + "\n"
-#     # TODO: add task name
-#     # TODO: optional: add examples of subtasks
-#     # TODO: add functions for subskills
-#     # make it gpt-4 format
-#     message = [
-#         {"role": "user", "content": prompt}]
-#     return message
+def encode_instruct_prompt(
+    tasks,
+    functions,
+    examples,
+    prompt_file_name="./prompts/robot_instruction_prompt.txt",
+):
+    """Encode prompt for instruction following pairs into a single string."""
+    prompt = open(prompt_file_name).read() + "\n"
+    task_placeholder = "{TASK_LIST_PLACEHOLDER}"
+    function_placeholder = "{FUNCTION_LIST_PLACEHOLDER}"
+    # Add task names as a list
+    task_string_to_replace = ""
+    for idx, task in enumerate(tasks):
+        task_string_to_replace += f"{idx + 1}. {task}\n"
+
+    # TODO: add functions for subskills
+    function_string_to_replace = ""
+    for idx, function in enumerate(functions):
+        function_info = function["function"]
+        function_description = function["description"]
+        prompt += f"###\n"
+        function_string_to_replace += f"'''\n"
+        function_string_to_replace += f"{function_info}\n"
+        function_string_to_replace += f"'''\n"
+        function_string_to_replace += f"{function_description}\n"
+    # Replace the placeholder string with a new string
+    prompt = prompt.replace(task_placeholder, task_string_to_replace)
+    prompt = prompt.replace(function_placeholder, function_string_to_replace)
+
+    # TODO: optional: add examples of subtasks
+    # Add examples of instruction pairs
+    example_string = ""
+    for example in examples:
+        instruction, input, output, task_name = (
+            example["instruction"],
+            example["instances"][0]["input"],
+            example["instances"][0]["output"],
+            example["task_name"],
+        )
+        example_string += f"###\n"
+        example_string += f" Task: {task_name}\n"
+        example_string += f" Instruction: {instruction}\n"
+        example_string += f" Input:\n{input}\n"
+        example_string += f" Output:\n{output}\n"
+    prompt += example_string
+    # make it gpt-4 format
+    message = [{"role": "user", "content": prompt}]
+    return message
+
 
 # def post_process_chat_response(num_prompt_instructions, response):
 #     if response is None:
@@ -169,104 +210,69 @@ def generate_task_data(
 #         instructions.append({"instruction": inst, "input": input, "output": output})
 #     return instructions
 
-# def generate_instruction_following_chat_data(
-#     output_dir="./gpt4_generation/",
-#     seed_tasks_path="./seed_tasks.jsonl",
-#     num_instructions_to_generate=1,
-#     model_name="gpt-4",
-#     num_prompt_instructions=0,
-#     request_batch_size=1,
-#     temperature=1.0,
-#     top_p=1.0,
-#     num_cpus=8,
-# ):
-#     ### Load the seed tasks. Optinal. TODO ###
 
-#     os.makedirs(output_dir, exist_ok=True)
-#     request_idx = 0
-#     ### load the LM-generated previous instructions. ###
-#     machine_instruction_data = []
-#     # if os.path.exists(os.path.join(output_dir, "regen.json")):
-#     #     machine_instruction_data = utils.jload(os.path.join(output_dir, "regen.json"))
-#     #     print(f"Loaded {len(machine_instruction_data)} machine-generated instructions")
+def generate_instruction_following_chat_data(
+    output_dir="./gpt4_generation/",
+    seed_tasks_path="./prompts/seeded_tasks.json",
+    seed_example_path="./prompts/seeded_example.jsonl",
+    function_file_path="./prompts/functions.json",
+    num_instructions_to_generate=1,
+    model_name="gpt-4",
+    num_prompt_instructions=0,
+    request_batch_size=1,
+    temperature=1.0,
+    top_p=1.0,
+    num_cpus=8,
+):
+    ### Load the seed tasks. ###
 
-#     # similarities = {}
-#     scorer = rouge_scorer.RougeScorer(["rougeL"], use_stemmer=False)
+    os.makedirs(output_dir, exist_ok=True)
+    request_idx = 0
+    seed_tasks = [json.loads(l) for l in open(seed_tasks_path, "r")]
+    seed_instructions = [json.loads(l) for l in open(seed_example_path, "r")]
+    functions = [json.loads(l) for l in open(function_file_path, "r")]
 
-#     # now let's generate new instructions!
-#     progress_bar = tqdm.tqdm(total=num_instructions_to_generate)
-#     if machine_instruction_data:
-#         progress_bar.update(len(machine_instruction_data))
+    ### load the LM-generated previous instructions. ###
+    machine_instruction_data = []
+    if os.path.exists(os.path.join(output_dir, "instruct_regen.json")):
+        machine_instruction_data = utils.jload(
+            os.path.join(output_dir, "instruct_regen.json")
+        )
+        print(f"Loaded {len(machine_instruction_data)} machine-generated instructions")
 
-#     # first we tokenize all the seed instructions and generated machine instructions
-#     # all_instructions = [d["instruction"] for d in seed_instruction_data] + [
-#     #     d["instruction"] for d in machine_instruction_data
-#     # ]
-#     # all_instruction_tokens = [scorer._tokenizer.tokenize(inst) for inst in all_instructions]
+    # now let's generate new instructions!
+    progress_bar = tqdm.tqdm(total=num_instructions_to_generate)
+    if machine_instruction_data:
+        progress_bar.update(len(machine_instruction_data))
 
-#     while len(machine_instruction_data) < num_instructions_to_generate:
-#         request_idx += 1
+    # while len(machine_instruction_data) < num_instructions_to_generate:
+    #     request_idx += 1
 
-#         batch_inputs = []
-#         for _ in range(request_batch_size):
-#             # only sampling from the seed tasks
-#             # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
-#             prompt = encode_prompt()
-#             batch_inputs.append(prompt)
-#         decoding_args = utils.OpenAIDecodingArguments(
-#             temperature=temperature,
-#             n=1,
-#             max_tokens=3072,  # hard-code to maximize the length. the requests will be automatically adjusted
-#             top_p=top_p,
-#             stop=["\n20", "20.", "20."],
-#         )
-#         request_start = time.time()
-#         results = utils.openai_chatcompletion(
-#             prompts=batch_inputs,
-#             model_name=model_name,
-#             batch_size=request_batch_size,
-#             decoding_args=decoding_args,
-#             logit_bias={"50256": -100},  # prevent the <|endoftext|> token from being generated
-#         )
-#         request_duration = time.time() - request_start
-#         responss_text = results['choices'][0]['message']['content']
-#         print(responss_text)
-#         utils.jdump(machine_instruction_data, os.path.join(output_dir, "regen.json"))
+    batch_input = []
+    for _ in range(request_batch_size):
+        # only sampling from the seed tasks
+        # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
+        prompt = encode_instruct_prompt(
+            tasks=seed_tasks,
+            functions=functions,
+            examples=seed_instructions,
+        )
+        batch_input.append(prompt)
+    decoding_args = utils.OpenAIChatDecodingArguments(
+        temperature=temperature,
+        top_p=top_p,
+        max_tokens=2048,
+        stop=["\n10", "10."],
+    )
+    request_start_time = time.time()
+    chatcompletions = utils.openai_chatcompletion(
+        prompts=batch_input,
+        model_name=model_name,
+        decoding_args=decoding_args,
+    )
+    request_duration = time.time() - request_start_time
+    return chatcompletions
 
-        # process_start = time.time()
-        # instruction_data = []
-        # for result in results:
-        #     new_instructions = post_process_chat_response(num_prompt_instructions, result)
-        #     instruction_data += new_instructions
-
-        # total = len(instruction_data)
-        # keep = 0
-        # for instruction_data_entry in instruction_data:
-        #     # computing similarity with the pre-tokenzied instructions
-        #     new_instruction_tokens = scorer._tokenizer.tokenize(instruction_data_entry["instruction"])
-        #     with Pool(num_cpus) as p:
-        #         rouge_scores = p.map(
-        #             partial(rouge_scorer._score_lcs, new_instruction_tokens),
-        #             all_instruction_tokens,
-        #         )
-        #     rouge_scores = [score.fmeasure for score in rouge_scores]
-        #     most_similar_instructions = {
-        #         all_instructions[i]: rouge_scores[i] for i in np.argsort(rouge_scores)[-10:][::-1]
-        #     }
-        #     if max(rouge_scores) > 0.7:
-        #         continue
-        #     else:
-        #         keep += 1
-        #     instruction_data_entry["most_similar_instructions"] = most_similar_instructions
-        #     instruction_data_entry["avg_similarity_score"] = float(np.mean(rouge_scores))
-        #     machine_instruction_data.append(instruction_data_entry)
-        #     all_instructions.append(instruction_data_entry["instruction"])
-        #     all_instruction_tokens.append(new_instruction_tokens)
-        #     progress_bar.update(1)
-        # process_duration = time.time() - process_start
-        # print(f"Request {request_idx} took {request_duration:.2f}s, processing took {process_duration:.2f}s")
-        # print(f"Generated {total} instructions, kept {keep} instructions")
-        # utils.jdump(machine_instruction_data, os.path.join(output_dir, "regen.json"))
 
 def main(task, **kwargs):
     globals()[task](**kwargs)

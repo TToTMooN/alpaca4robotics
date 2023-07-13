@@ -1,0 +1,73 @@
+"###
+Task: Identify and pick up the lighter block and move it to the opposite end of the table
+Instruction 1: Is it possible to identify the lighter block by looking at them?Input: <no input>
+Output:
+<verbal output>No, we need to grasp each block and use the force sensor to infer the weight of the blocks.
+<action output>grasp(block A), grasp(block B).
+
+Instruction 2: Based on the sensor feedback, which is the lighter block? 
+Input: [Force reading from blockA, Force reading from blockB]
+Output:
+<verbal output>Block A is lighter based on the force sensor readings.
+<action output>grasp(block A).
+
+Instruction 3: What is the next step after identifying the lighter block?
+Input: <no input>
+Output:
+<verbal output>Move the lighter block to the opposite end of the table.
+<action output>place(block A, [opposite end of the table position]).
+
+###
+Task: Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height
+Instruction 1: Can you identify the current positions of block A and block B? 
+Input: [Position of Block A and Block B]
+Output:
+<verbal output>Yes, based on the current observation, block A is at position X and block B is at position Y.
+<action output>reach(block A position), reach(block B position).
+
+Instruction 2: Can you stack block A on top of block B?
+Input: [Position of Block A, Position of Block B]
+Output:
+<verbal output>Yes, grasp block A, move it over block B and release it.
+<action output>grasp(block A), place(block A, [block B position + block B height]).
+
+Instruction 3: Did the stacking occur successfully? 
+Input: [Relative positions of Block A and Block B after the stacking attempt]
+Output:
+<verbal output>Yes, block A was successfully stacked on top of block B.
+<action output>grasp(block B). 
+
+###
+Task: Pick and hold block A and shake it gently without dropping it to understand the nature and density of the block's material
+Instruction 1: Can you pick up block A?
+Input: [Position of Block A]
+Output:
+<verbal output>Yes, I can reach block A and pick it up.
+<action output>grasp(block A).
+
+Instruction 2: Can you shake block A gently without dropping it?
+Input: <no input>
+Output:
+<verbal output>Yes, I will have to hold the block firmly while performing the action.
+<action output>move_to(shake position), move_to(block A original position).
+
+###
+Task: Using the force sensor, apply a specific amount of force against block B, moving it a certain distance across the table
+Instruction 1: Can the force sensor read the amount of force being applied?
+Input: <no input>
+Output:
+<verbal output>Yes, the force sensor can measure the force.
+<action output>reach(block B position).
+
+Instruction 2: Can you apply a specific amount of force against block B?
+Input: <no input>
+Output:
+<verbal output>Yes, I can apply a specified amount of force.
+<action output>move_to(block B position + [desired displacement vector]).
+
+Instruction 3: Did the block move the desired distance?
+Input: [Position of Block B after application of force]
+Output:
+<verbal output>Yes, block B moved the desired distance.
+<action output><noparam>.
+"
