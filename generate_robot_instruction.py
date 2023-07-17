@@ -164,58 +164,72 @@ def encode_instruct_prompt(
             example["task_name"],
         )
         example_string += f"###\n"
-        example_string += f" Task: {task_name}\n"
-        example_string += f" Instruction: {instruction}\n"
-        example_string += f" Input:\n{input}\n"
-        example_string += f" Output:\n{output}\n"
+        example_string += f" <Task>: {task_name}\n"
+        example_string += f" <Instruction>: {instruction}\n"
+        example_string += f" <Input>: {input}\n"
+        example_string += f" <Output>:\n{output}\n"
     prompt += example_string
     # make it gpt-4 format
     message = [{"role": "user", "content": prompt}]
     return message
 
 
-# def post_process_chat_response(num_prompt_instructions, response):
-#     if response is None:
-#         return []
-#     ### Parse the response into pairs of instruction, input, output ###
-#     raw_instructions = f"{num_prompt_instructions+1}. Instruction:" + response["text"]
-#     raw_instructions = re.split("###", raw_instructions)
-#     instructions = []
-#     for idx, inst in enumerate(raw_instructions):
-#         # if the decoding stops due to length, the last example is likely truncated so we discard it
-#         if idx == len(raw_instructions) - 1 and response["finish_reason"] == "length":
-#             continue
-#         ##### Parse the response into instruction, input, output #####
-#         idx += num_prompt_instructions + 1
-#         splitted_data = re.split(f"{idx}\.\s+(Instruction|Input|Output):", inst)
-#         if len(splitted_data) != 7:
-#             continue
-#         else:
-#             inst = splitted_data[2].strip()
-#             input = splitted_data[4].strip()
-#             input = "" if input.lower() == "<noinput>" else input
-#             output = splitted_data[6].strip()
-
-#         ##### FILTER OUT Negative Examples #####
-#         # filter out too short or too long instructions
-#         if len(inst.split()) <= 3 or len(inst.split()) > 150:
-#             continue
-#         # filter based on keywords that are not suitable for language models.
-#         # filter those starting with punctuation
-#         if inst[0] in string.punctuation:
-#             continue
-#         # filter those starting with non-english character
-#         if not inst[0].isascii():
-#             continue
-#         instructions.append({"instruction": inst, "input": input, "output": output})
-#     return instructions
+def post_process_chat_response(response):
+    if response is None:
+        return []
+    ### Parse the response into pairs of instruction, input, output ###
+    raw_instructions = response["message"]["content"]
+    raw_instructions = re.split("###", raw_instructions)
+    instructions = []
+    for idx, inst in enumerate(raw_instructions):
+        # if the decoding stops due to length, the last example is likely truncated so we discard it
+        if idx == len(raw_instructions) - 1 and response["finish_reason"] == "length":
+            continue
+        ##### Parse the response into instruction, input, output #####
+        idx += 1
+        splitted_data = re.split(f"(<Task>|<Instruction>|<Input>|<Output>)", inst)
+        if len(splitted_data) != 9:
+            continue
+        else:
+            task = splitted_data[2].strip()
+            inst = splitted_data[4].strip()
+            input = splitted_data[6].strip()
+            input = "" if input.lower() == "<noinput>" else input
+            output = splitted_data[8].strip()
+            # parse output into <verbal output> and <action output>
+            output_splitted_data = re.split(
+                f"(\[verbal\]|\[action\])", output
+            )
+            verbal_output = output_splitted_data[2].strip()
+            action_output = output_splitted_data[4].strip()
+            ##### FILTER OUT Negative Examples #####
+            # filter out too short or too long instructions
+            if len(inst.split()) <= 3 or len(inst.split()) > 150:
+                continue
+            # filter based on keywords that are not suitable for language models.
+            # filter those starting with punctuation
+            if inst[0] in string.punctuation:
+                continue
+            # filter those starting with non-english character
+            if not inst[0].isascii():
+                continue
+            instructions.append(
+                {
+                    "task": task,
+                    "instruction": inst,
+                    "input": input,
+                    "verbal_output": verbal_output,
+                    "action_output": action_output,
+                }
+            )
+    return instructions
 
 
 def generate_instruction_following_chat_data(
     output_dir="./gpt4_generation/",
-    seed_tasks_path="./prompts/seeded_tasks.json",
+    seed_tasks_path="./prompts/seeded_tasks.jsonl",
     seed_example_path="./prompts/seeded_example.jsonl",
-    function_file_path="./prompts/functions.json",
+    function_file_path="./prompts/skill_functions.jsonl",
     num_instructions_to_generate=1,
     model_name="gpt-4",
     num_prompt_instructions=0,
@@ -271,7 +285,24 @@ def generate_instruction_following_chat_data(
         decoding_args=decoding_args,
     )
     request_duration = time.time() - request_start_time
-    return chatcompletions
+    instructions = []
+    for completion in chatcompletions:
+        new_instructions = post_process_chat_response(completion)
+        instructions += new_instructions
+    
+    total = len(instructions)
+    keep = 0
+
+    for instruction_data in instructions:
+        keep += 1
+        machine_instruction_data.append(instruction_data)
+        progress_bar.update(1)
+    
+    print(f"Request {request_idx} took {request_duration:.2f}s")
+    print(f"Generated {total} instructions, kept {keep} instructions")
+    utils.jdump(machine_instruction_data, os.path.join(output_dir, "instruct_regen.json"))
+
+    return instructions
 
 
 def main(task, **kwargs):

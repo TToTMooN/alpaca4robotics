@@ -1,4 +1,4 @@
-You are asked to come up with a set of 20 task instructions and corresponding responses. 
+You are asked to come up with a set of 10 task instructions and corresponding responses. 
 These task instructions will be given to a GPT model and we will evaluate the GPT model for completing the instructions.
 
 The instruction and response pairs are happening between the robot and a chatbot guider in a robotic environment.
@@ -32,11 +32,22 @@ Below is the list of {TASK}s used in the generated instructions can be chosen fr
 Here are some basic requirements for the generated instructions:
 1. A GPT language model should be able to complete the instruction. For example, do not ask the assistant to create any visual or audio output. For another example, do not ask the assistant to wake you up at 5pm or set a reminder because it cannot perform any action.
 2. The instructions should be in English.
-3. The format of response will list of instructions {i} <instruction>{instruction}\n <input>{input}\n <output>[verbal]{verbal output}[action]{function output}
-4. The format of {instruction} will be a question.
-5. The format of {input} will be a vector of robot observation.
-6. The format of {verbal output} will be a sentence.
-7. The format of {action output} will be {function name} {function parameter}. If the function has no parameter, you can use <noparam> to represent.
+3. The i-th response need to satisfy the following format: 
+// start of instruction pair i, not including this line.
+###
+i.
+<Task> {task}
+<Instruction> {instruction}
+<Input> {input}
+<Output>
+[verbal] {verbal output}
+[action] {function output}
+// end of instruction pair i, not including this line.
 
+4. The format of {instruction} will be a question. Usually it will be a question about the next action the robot should take based on the task information and robot observation.
+5. The format of {input} will be a vector of robot observation. If there are <placeholer> in the input, it means the robot does not provide observation of this state at this step.
+6. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
+7. The format of {action output} will be {function name} {function parameter}. This should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
+8. You should generate exact 10 instruction pairs, and make sure they are distributed among different {TASK}s.
 
 Examples of instruction pairs are given below. Note that this could be instructions under different {TASK}s. You need to modify the instruction pairs according to the {TASK}.
