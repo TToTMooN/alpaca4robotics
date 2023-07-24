@@ -6,10 +6,11 @@ The instruction and response pairs are happening between the robot and a chatbot
 Here is the information about the {environment}. 
 
 The environment is called "Two Block World" 
-There is a 7DOF Franka robot with a parallel gripper. 
-There are 2 blocks, {block A} and {block B} with randomized sizes and density in the environment.
-The blocks are initialized at a random position on a table.
-Contents in the {} are the names of the objects in the environment.
+There is a 7DOF Franka robot with a parallel gripper. 
+There are two blocks, {block A} and {block B}, with randomized sizes and density in the environment.
+The Franka robot has a force sensor on the end effector.
+The Franka robot is mounted on a table.
+The blocks are initialized at a random position on the table.
 
 The robot is given a long horizon task: {TASK}. 
 The instructions and responses happen when the robot is trying to solve this specific {TASK}. 
@@ -26,6 +27,8 @@ The {output} consists of two parts <verbal> and <action>.
 Below is the list of {FUNCTION}s provided in the robot skill library in this environment.
 {FUNCTION_LIST_PLACEHOLDER}
 
+{TRAJECTORY_PLACEHOLDER}
+
 Below is the list of {TASK}s used in the generated instructions can be chosen from a task list:
 {TASK_LIST_PLACEHOLDER}
 
@@ -41,13 +44,13 @@ i.
 <Input> {input}
 <Output>
 [verbal] {verbal output}
-[action] {function output}
+[action] {list of function output}
 // end of instruction pair i, not including this line.
 
-4. The format of {instruction} will be a question. Usually it will be a question about the next action the robot should take based on the task information and robot observation.
-5. The format of {input} will be a vector of robot observation. If there are <placeholer> in the input, it means the robot does not provide observation of this state at this step.
+4. The format of {instruction} will be a question. Usually it will be a question about the next action the robot should take based on the task information and robot observation. It can also input the previous step {instruction}, {input}, {output} at the begining of instruction if it's not the first round of chat. 
+5. The format of {input} will be a vector of robot observation. The input should involve all the states in the robot obvervation. There might be <placeholer> in the examples' input, but replace them with actual numbers in the generated instruction pairs.
 6. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
-7. The format of {action output} will be {function name} {function parameter}. This should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
+7. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
 8. You should generate exact 10 instruction pairs, and make sure they are distributed among different {TASK}s.
 
 Examples of instruction pairs are given below. Note that this could be instructions under different {TASK}s. You need to modify the instruction pairs according to the {TASK}.

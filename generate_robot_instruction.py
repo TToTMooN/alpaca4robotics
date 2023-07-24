@@ -128,23 +128,24 @@ def encode_instruct_prompt(
     tasks,
     functions,
     examples,
+    subskill_data=None,
     prompt_file_name="./prompts/robot_instruction_prompt.txt",
 ):
     """Encode prompt for instruction following pairs into a single string."""
     prompt = open(prompt_file_name).read() + "\n"
     task_placeholder = "{TASK_LIST_PLACEHOLDER}"
     function_placeholder = "{FUNCTION_LIST_PLACEHOLDER}"
+    trajectory_placeholder = "{TRAJECTORY_PLACEHOLDER}"
     # Add task names as a list
     task_string_to_replace = ""
     for idx, task in enumerate(tasks):
         task_string_to_replace += f"{idx + 1}. {task}\n"
 
-    # TODO: add functions for subskills
+    # Add add functions for subskills
     function_string_to_replace = ""
     for idx, function in enumerate(functions):
         function_info = function["function"]
         function_description = function["description"]
-        prompt += f"###\n"
         function_string_to_replace += f"'''\n"
         function_string_to_replace += f"{function_info}\n"
         function_string_to_replace += f"'''\n"
@@ -153,7 +154,21 @@ def encode_instruct_prompt(
     prompt = prompt.replace(task_placeholder, task_string_to_replace)
     prompt = prompt.replace(function_placeholder, function_string_to_replace)
 
-    # TODO: optional: add examples of subtasks
+    # optional: add example trajectory of subskills
+    if subskill_data is not None:
+        subskill_data_string_to_replace = ""
+        subskill_data_string_to_replace += f"Below is some example trajectories of the robot executing the functions in the skill library:\n"
+        for data in subskill_data:
+            skill_name = data["skill_name"]
+            skill_description = data["skill_description"]
+            skill_trajectory = data["skill_trajectory"]
+            subskill_data_string_to_replace += f"'''\n"
+            subskill_data_string_to_replace += f"{skill_name}\n"
+            subskill_data_string_to_replace += f"{skill_description}\n"
+            subskill_data_string_to_replace += f"'''\n"
+            subskill_data_string_to_replace += f"{skill_trajectory}\n"
+        prompt = prompt.replace(trajectory_placeholder, subskill_data_string_to_replace)
+
     # Add examples of instruction pairs
     example_string = ""
     for example in examples:
@@ -197,9 +212,7 @@ def post_process_chat_response(response):
             input = "" if input.lower() == "<noinput>" else input
             output = splitted_data[8].strip()
             # parse output into <verbal output> and <action output>
-            output_splitted_data = re.split(
-                f"(\[verbal\]|\[action\])", output
-            )
+            output_splitted_data = re.split(f"(\[verbal\]|\[action\])", output)
             verbal_output = output_splitted_data[2].strip()
             action_output = output_splitted_data[4].strip()
             ##### FILTER OUT Negative Examples #####
@@ -230,6 +243,7 @@ def generate_instruction_following_chat_data(
     seed_tasks_path="./prompts/seeded_tasks.jsonl",
     seed_example_path="./prompts/seeded_example.jsonl",
     function_file_path="./prompts/skill_functions.jsonl",
+    subskill_data_path="./subtask_data/",
     num_instructions_to_generate=1,
     model_name="gpt-4",
     num_prompt_instructions=0,
@@ -253,57 +267,77 @@ def generate_instruction_following_chat_data(
             os.path.join(output_dir, "instruct_regen.json")
         )
         print(f"Loaded {len(machine_instruction_data)} machine-generated instructions")
+    ### load subskill data ###
+    subskill_data = []
+    if os.path.exists(subskill_data_path):
+        for file in os.listdir(subskill_data_path):
+            file_name = os.path.splitext(file)[0]
+            data = {"skill_name": "", "skill_description": ""}
+            data["skill_name"] = file_name
+            data[
+                "skill_description"
+            ] = "Start at initial position, ending with skill finished successfully."
+            skill_trajectory = utils.jload(os.path.join(subskill_data_path, file))
+            # downsample the trajectory to 5 steps
+            num_of_steps = len(skill_trajectory)
+            if num_of_steps > 5:
+                skill_trajectory = skill_trajectory[:: num_of_steps // 5]
+            data["skill_trajectory"] = skill_trajectory
+            # add data name and description
+            subskill_data += data
 
     # now let's generate new instructions!
     progress_bar = tqdm.tqdm(total=num_instructions_to_generate)
     if machine_instruction_data:
         progress_bar.update(len(machine_instruction_data))
 
-    # while len(machine_instruction_data) < num_instructions_to_generate:
-    #     request_idx += 1
+    while len(machine_instruction_data) < num_instructions_to_generate:
+        request_idx += 1
 
-    batch_input = []
-    for _ in range(request_batch_size):
-        # only sampling from the seed tasks
-        # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
-        prompt = encode_instruct_prompt(
-            tasks=seed_tasks,
-            functions=functions,
-            examples=seed_instructions,
+        batch_input = []
+        for _ in range(request_batch_size):
+            # only sampling from the seed tasks
+            # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
+            prompt = encode_instruct_prompt(
+                tasks=seed_tasks,
+                functions=functions,
+                # subskill_data=subskill_data,
+                examples=seed_instructions,
+            )
+            batch_input.append(prompt)
+        decoding_args = utils.OpenAIChatDecodingArguments(
+            temperature=temperature,
+            top_p=top_p,
+            max_tokens=4096,
+            stop=["\n11", "11."],
         )
-        batch_input.append(prompt)
-    decoding_args = utils.OpenAIChatDecodingArguments(
-        temperature=temperature,
-        top_p=top_p,
-        max_tokens=2048,
-        stop=["\n10", "10."],
-    )
-    request_start_time = time.time()
-    chatcompletions = utils.openai_chatcompletion(
-        prompts=batch_input,
-        model_name=model_name,
-        decoding_args=decoding_args,
-    )
-    request_duration = time.time() - request_start_time
-    instructions = []
-    for completion in chatcompletions:
-        new_instructions = post_process_chat_response(completion)
-        instructions += new_instructions
-    
-    total = len(instructions)
-    keep = 0
+        request_start_time = time.time()
+        chatcompletions = utils.openai_chatcompletion(
+            prompts=batch_input,
+            model_name=model_name,
+            decoding_args=decoding_args,
+        )
+        request_duration = time.time() - request_start_time
+        instructions = []
+        for completion in chatcompletions:
+            new_instructions = post_process_chat_response(completion)
+            instructions += new_instructions
+        total = len(instructions)
+        keep = 0
+        
 
-    for instruction_data in instructions:
-        keep += 1
-        machine_instruction_data.append(instruction_data)
-        progress_bar.update(1)
-    
-    print(f"Request {request_idx} took {request_duration:.2f}s")
-    print(f"Generated {total} instructions, kept {keep} instructions")
-    utils.jdump(machine_instruction_data, os.path.join(output_dir, "instruct_regen.json"))
+        for instruction_data in instructions:
+            keep += 1
+            machine_instruction_data.append(instruction_data)
+            progress_bar.update(1)
+        
+        print(progress_bar)
 
-    return instructions
-
+        print(f"Request {request_idx} took {request_duration:.2f}s")
+        print(f"Generated {total} instructions, kept {keep} instructions")
+        utils.jdump(
+            machine_instruction_data, os.path.join(output_dir, "instruct_regen.json")
+        )
 
 def main(task, **kwargs):
     globals()[task](**kwargs)

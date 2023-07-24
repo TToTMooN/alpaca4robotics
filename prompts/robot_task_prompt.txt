@@ -3,7 +3,9 @@ You are serving as a task-generation helper for a given robot environment. 
 Here is the information about the environment. The environment is called {Two Block World} 
 There is a 7DOF Franka robot with a parallel gripper. 
 There are two blocks, {block A} and {block B}, with randomized sizes and density in the environment.
-The blocks are initialized at a random position on a table.
+The Franka robot has a force sensor on the end effector.
+The Franka robot is mounted on a table.
+The blocks are initialized at a random position on the table.
 Contents in the {} are the names of the objects in the environment.
 
 Come up with 10 different tasks for the robot to perform.
