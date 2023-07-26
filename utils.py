@@ -258,3 +258,31 @@ def jload(f, mode="r"):
     jdict = json.load(f)
     f.close()
     return jdict
+
+def json2jsonl(json_file, jsonl_file):
+    """Convert a json file to a jsonl file."""
+    with open(json_file, "r") as f:
+        data = json.load(f)
+    with open(jsonl_file, "w") as f:
+        for item in data:
+            f.write(json.dumps(item) + '\n')
+
+def old_inst_json_to_gorilla_form_json(olf_file_path, new_file_path):
+    instructions = jload(olf_file_path)
+    new_instructions = []
+    for inst in instructions:
+        code = f""
+        code += f"###Instruction: {inst['instruction']}\n"
+        # code += f"###Input: {inst['input']}\n"
+        output = f""
+        output += f"'explanation': {inst['verbal_output']}, 'code': {inst['action_output']}"
+        code += f"###Output: {{{output}}}\n"
+        new_instructions.append(
+            {
+                "code": code,
+                "task": inst["task"],
+                "input": inst["input"],
+            }
+        )
+    jdump(new_instructions, new_file_path)
+    return new_instructions

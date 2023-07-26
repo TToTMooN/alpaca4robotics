@@ -179,10 +179,10 @@ def encode_instruct_prompt(
             example["task_name"],
         )
         example_string += f"###\n"
-        example_string += f" <Task>: {task_name}\n"
-        example_string += f" <Instruction>: {instruction}\n"
-        example_string += f" <Input>: {input}\n"
-        example_string += f" <Output>:\n{output}\n"
+        example_string += f" <Task> {task_name}\n"
+        example_string += f" <Instruction> {instruction}\n"
+        example_string += f" <Input> {input}\n"
+        example_string += f" <Output> \n{output}\n"
     prompt += example_string
     # make it gpt-4 format
     message = [{"role": "user", "content": prompt}]
@@ -236,7 +236,59 @@ def post_process_chat_response(response):
                 }
             )
     return instructions
-
+def post_process_chat_response_gorilla_format(response):
+    if response is None:
+        return []
+    ### Parse the response into pairs of instruction, input, output ###
+    raw_instructions = response["message"]["content"]
+    raw_instructions = re.split("###", raw_instructions)
+    instructions = []
+    for idx, inst in enumerate(raw_instructions):
+        # if the decoding stops due to length, the last example is likely truncated so we discard it
+        if idx == len(raw_instructions) - 1 and response["finish_reason"] == "length":
+            continue
+        ##### Parse the response into instruction, input, output #####
+        idx += 1
+        splitted_data = re.split(f"(<Task>|<Instruction>|<Input>|<Output>)", inst)
+        if len(splitted_data) != 9:
+            continue
+        else:
+            task = splitted_data[2].strip()
+            inst = splitted_data[4].strip()
+            input = splitted_data[6].strip()
+            input = "" if input.lower() == "<noinput>" else input
+            output = splitted_data[8].strip()
+            # parse output into <verbal output> and <action output>
+            output_splitted_data = re.split(f"(\[verbal\]|\[action\])", output)
+            verbal_output = output_splitted_data[2].strip()
+            action_output = output_splitted_data[4].strip()
+            ##### FILTER OUT Negative Examples #####
+            # filter out too short or too long instructions
+            if len(inst.split()) <= 3 or len(inst.split()) > 150:
+                continue
+            # filter based on keywords that are not suitable for language models.
+            # filter those starting with punctuation
+            if inst[0] in string.punctuation:
+                continue
+            # filter those starting with non-english character
+            if not inst[0].isascii():
+                continue
+            # code in format of gorilla example
+            code = f""
+            code += f"###Instruction: {inst}\n"
+            code += f"###Input: {input}\n"
+            output = f""
+            output += f"'explanation': {verbal_output}, 'code': {action_output}"
+            code += f"###Output: {{{output}}}\n"
+            instructions.append(
+                {
+                    "code": code,
+                    "task": task,
+                    # "environment": environment,
+                    # "function_api": function_api,
+                }
+            )
+    return instructions
 
 def generate_instruction_following_chat_data(
     output_dir="./gpt4_generation/",
@@ -309,7 +361,7 @@ def generate_instruction_following_chat_data(
             temperature=temperature,
             top_p=top_p,
             max_tokens=4096,
-            stop=["\n11", "11."],
+            stop=["\n21", "21."],
         )
         request_start_time = time.time()
         chatcompletions = utils.openai_chatcompletion(
@@ -324,7 +376,6 @@ def generate_instruction_following_chat_data(
             instructions += new_instructions
         total = len(instructions)
         keep = 0
-        
 
         for instruction_data in instructions:
             keep += 1

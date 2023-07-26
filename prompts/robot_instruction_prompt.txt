@@ -1,4 +1,4 @@
-You are asked to come up with a set of 10 task instructions and corresponding responses. 
+You are asked to come up with a set of 20 task instructions and corresponding responses. 
 These task instructions will be given to a GPT model and we will evaluate the GPT model for completing the instructions.
 
 The instruction and response pairs are happening between the robot and a chatbot guider in a robotic environment.
@@ -51,6 +51,7 @@ i.
 5. The format of {input} will be a vector of robot observation. The input should involve all the states in the robot obvervation. There might be <placeholer> in the examples' input, but replace them with actual numbers in the generated instruction pairs.
 6. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
 7. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
-8. You should generate exact 10 instruction pairs, and make sure they are distributed among different {TASK}s.
+8. You should generate exact 20 instruction pairs, and make sure they are distributed among different {TASK}s.
+9. Each instruction pair should be separated by a line of "###" at the beginning.
 
 Examples of instruction pairs are given below. Note that this could be instructions under different {TASK}s. You need to modify the instruction pairs according to the {TASK}.
