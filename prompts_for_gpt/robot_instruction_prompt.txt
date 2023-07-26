@@ -1,0 +1,57 @@
+You are asked to come up with a set of 20 task instructions and corresponding responses. 
+These task instructions will be given to a GPT model and we will evaluate the GPT model for completing the instructions.
+
+The instruction and response pairs are happening between the robot and a chatbot guider in a robotic environment.
+
+Here is the information about the {environment}. 
+
+The environment is called "Two Block World" 
+There is a 7DOF Franka robot with a parallel gripper. 
+There are two blocks, {block A} and {block B}, with randomized sizes and density in the environment.
+The Franka robot has a force sensor on the end effector.
+The Franka robot is mounted on a table.
+The blocks are initialized at a random position on the table.
+
+The robot is given a long horizon task: {TASK}. 
+The instructions and responses happen when the robot is trying to solve this specific {TASK}. 
+
+Each instruction data pair consists of three parts: {instruction}, {input}, {output}
+The {instruction} consists of the question asked by the robot to help make decisions, it will attach the previous step {instruction}, {input}, {output} at the begining of instruction if it's not the first round of chat.
+
+The {input} consists of the current observation of the robot. If it's not provided, it will be <noinput>.
+
+The {output} consists of two parts <verbal> and <action>.
+    - The <verbal> part include an description of the reasoning process and the current planned action.
+    - The <action> part include a downstream action provided in the function lists executable by the robot. 
+
+Below is the list of {FUNCTION}s provided in the robot skill library in this environment.
+{FUNCTION_LIST_PLACEHOLDER}
+
+{TRAJECTORY_PLACEHOLDER}
+
+Below is the list of {TASK}s used in the generated instructions can be chosen from a task list:
+{TASK_LIST_PLACEHOLDER}
+
+Here are some basic requirements for the generated instructions:
+1. A GPT language model should be able to complete the instruction. For example, do not ask the assistant to create any visual or audio output. For another example, do not ask the assistant to wake you up at 5pm or set a reminder because it cannot perform any action.
+2. The instructions should be in English.
+3. The i-th response need to satisfy the following format: 
+// start of instruction pair i, not including this line.
+###
+i.
+<Task> {task}
+<Instruction> {instruction}
+<Input> {input}
+<Output>
+[verbal] {verbal output}
+[action] {list of function output}
+// end of instruction pair i, not including this line.
+
+4. The format of {instruction} will be a question. Usually it will be a question about the next action the robot should take based on the task information and robot observation. It can also input the previous step {instruction}, {input}, {output} at the begining of instruction if it's not the first round of chat. 
+5. The format of {input} will be a vector of robot observation. The input should involve all the states in the robot obvervation. There might be <placeholer> in the examples' input, but replace them with actual numbers in the generated instruction pairs.
+6. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
+7. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
+8. You should generate exact 20 instruction pairs, and make sure they are distributed among different {TASK}s.
+9. Each instruction pair should be separated by a line of "###" at the beginning.
+
+Examples of instruction pairs are given below. Note that this could be instructions under different {TASK}s. You need to modify the instruction pairs according to the {TASK}.

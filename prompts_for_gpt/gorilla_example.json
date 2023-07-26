@@ -1,0 +1,121 @@
+{
+    "code": "{'Instruction': I need an API that can estimate the relative depth of objects from a single image. The output should be an inverse depth map., 'Output': {'domain': 'Classification', 'api_call': \"model = torch.hub.load('intel-isl/MiDaS', 'DPT_Hybrid', pretrained=True)\", 'api_provider': 'PyTorch', 'explanation': \"Load the pretrained MiDaS model for estimating relative depth from a single image, which outputs an inverse depth map.\", 'code': 'import torch\nmodel = torch.hub.load(\"intel-isl/MiDaS\", \"DPT_Hybrid\", pretrained=True)'}}",
+    "api_call": "torch.hub.load(repo_or_dir='intel-isl/MiDaS', model='DPT_Hybrid', pretrained=True)",
+    "provider": "PyTorch",
+    "api_data": {
+        "domain": "Classification",
+        "framework": "PyTorch",
+        "functionality": "Computing relative depth from a single image",
+        "api_name": "MiDaS",
+        "api_call": "torch.hub.load(repo_or_dir='intel-isl/MiDaS', model='DPT_Hybrid', pretrained=True)",
+        "api_arguments": {
+            "repo_or_dir": "intel-isl/MiDaS",
+            "model": "model_type"
+        },
+        "python_environment_requirements": "pip install timm",
+        "example_code": [
+            "import cv2",
+            "import torch",
+            "import urllib.request",
+            "import matplotlib.pyplot as plt",
+            "url, filename = ('https://github.com/pytorch/hub/raw/master/images/dog.jpg', 'dog.jpg')",
+            "urllib.request.urlretrieve(url, filename)",
+            "model_type = 'DPT_Large'",
+            "midas = torch.hub.load('intel-isl/MiDaS', 'DPT_Hybrid')",
+            "device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')",
+            "midas.to(device)",
+            "midas.eval()",
+            "midas_transforms = torch.hub.load('intel-isl/MiDaS', 'transforms')",
+            "if model_type == 'DPT_Large' or model_type == 'DPT_Hybrid':",
+            " transform = midas_transforms.dpt_transform",
+            "else:",
+            " transform = midas_transforms.small_transform",
+            "img = cv2.imread(filename)",
+            "img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)",
+            "input_batch = transform(img).to(device)",
+            "with torch.no_grad():",
+            " prediction = midas(input_batch)",
+            "prediction = torch.nn.functional.interpolate(",
+            " prediction.unsqueeze(1),",
+            " size=img.shape[:2],",
+            " mode='bicubic',",
+            " align_corners=False,",
+            ").squeeze()",
+            "output = prediction.cpu().numpy()",
+            "plt.imshow(output)",
+            "plt.show()"
+        ],
+        "performance": {
+            "dataset": "10 distinct datasets",
+            "accuracy": "Multi-objective optimization"
+        },
+        "description": "MiDaS computes relative inverse depth from a single image. The repository provides multiple models that cover different use cases ranging from a small, high-speed model to a very large model that provide the highest accuracy. The models have been trained on 10 distinct datasets using multi-objective optimization to ensure high quality on a wide range of inputs."
+    }
+}
+{
+    "code": "###Instruction: What is an API that can be used to classify sports activities in videos?\n###Output: {'domain': 'Video Classification', 'api_call': 'model = torch.hub.load('facebookresearch/pytorchvideo', 'slow_r50', pretrained=True)', 'api_provider': 'PyTorch', 'explanation': 'Load the pretrained 3D ResNet model from PyTorch for video classification, suitable for classifying sports activities in videos.', 'code': 'import torch\nmodel = torch.hub.load('facebookresearch/pytorchvideo', 'slow_r50', pretrained=True)'}\n",
+    "api_call": "torch.hub.load(repo_or_dir='facebookresearch/pytorchvideo', model='slow_r50', pretrained=True)",
+    "provider": "PyTorch",
+    "api_data": {
+        "domain": "Video Classification",
+        "framework": "PyTorch",
+        "functionality": "3D ResNet",
+        "api_name": "slow_r50",
+        "api_call": "torch.hub.load(repo_or_dir='facebookresearch/pytorchvideo', model='slow_r50', pretrained=True)",
+        "api_arguments": {
+            "pretrained": "True"
+        },
+        "python_environment_requirements": [
+            "torch",
+            "json",
+            "urllib",
+            "pytorchvideo",
+            "torchvision",
+            "torchaudio",
+            "torchtext",
+            "torcharrow",
+            "TorchData",
+            "TorchRec",
+            "TorchServe",
+            "PyTorch on XLA Devices"
+        ],
+        "example_code": [
+            "import torch",
+            "model = torch.hub.load('facebookresearch/pytorchvideo', 'slow_r50', pretrained=True)",
+            "device = 'cpu'",
+            "model = model.eval()",
+            "model = model.to(device)"
+        ],
+        "performance": {
+            "dataset": "Kinetics 400",
+            "accuracy": {
+                "top_1": 74.58,
+                "top_5": 91.63
+            },
+            "Flops (G)": 54.52,
+            "Params (M)": 32.45
+        },
+        "description": "The 3D ResNet model is a Resnet-style video classification network pretrained on the Kinetics 400 dataset. It is based on the architecture from the paper 'SlowFast Networks for Video Recognition' by Christoph Feichtenhofer et al."
+    }
+}
+
+{
+    "code": "###Instruction: Write an API implementation that takes customer reviews as input and extracts features to analyze customer sentiment.\n###Output: <<<domain>>>: Natural Language Processing Feature Extraction\n<<<api_call>>>: AutoModel.from_pretrained('YituTech/conv-bert-base')\n<<<api_provider>>>: Hugging Face Transformers\n<<<explanation>>>: 1. We import the necessary classes from the transformers package. This includes AutoTokenizer and AutoModel for tokenizing and processing customer review text.\n2. We use the from_pretrained method of the AutoModel class to load the pre-trained model 'YituTech/conv-bert-base'. This model is based on ConvBERT and is suitable for feature extraction in text data.\n3. We load the customer review text, tokenize it, and use the model to extract features from the review. These features can then be used to analyze customer sentiment.\n<<<code>>>: from transformers import AutoTokenizer, AutoModel\ntokenizer = AutoTokenizer.from_pretrained('YituTech/conv-bert-base')\nmodel = AutoModel.from_pretrained('YituTech/conv-bert-base')\ninputs = tokenizer(customer_review, return_tensors='pt')\nfeatures = model(**inputs)\n",
+    "api_call": "AutoModel.from_pretrained('YituTech/conv-bert-base')",
+    "provider": "Hugging Face Transformers",
+    "api_data": {
+        "domain": "Natural Language Processing Feature Extraction",
+        "framework": "Hugging Face Transformers",
+        "functionality": "Feature Extraction",
+        "api_name": "YituTech/conv-bert-base",
+        "api_call": "AutoModel.from_pretrained('YituTech/conv-bert-base')",
+        "api_arguments": "N/A",
+        "python_environment_requirements": "transformers",
+        "example_code": "N/A",
+        "performance": {
+            "dataset": "N/A",
+            "accuracy": "N/A"
+        },
+        "description": "A pre-trained ConvBERT model for feature extraction provided by YituTech, based on the Hugging Face Transformers library."
+    }
+}
