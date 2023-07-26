@@ -1,5 +1,0 @@
-{"function": "def reach(position, orientation[optional])","description": "The skill of end effector reaching to a desired pose. position is a 3D vector and orientation is a quaternion(optional)."}
-{"function": "def grasp(object_name)","description": "The skill of grasping an object. object_name is the name of the object to be grasped."}
-{"function": "def place(object_name, position, orientation[optional])","description": "The skill of placing an object. object_name is the name of the object to be placed. position is a 3D vector and orientation is a quaternion(optional)."}
-{"function": "def move_to(position, orientation[optional])","description": "The skill of moving the end effector to a desired pose. position is a 3D vector and orientation is a quaternion(optional)."}
-{"function": "def reset()","description": "The skill of resetting the robot to its initial state."}

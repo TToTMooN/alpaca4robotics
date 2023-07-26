@@ -133,6 +133,8 @@ dmypy.json
 tmp
 .vscode
 
+gpt4_generation/
+subtask_data/
 regen.json
 task_regen.json
 instruct_regen.json
