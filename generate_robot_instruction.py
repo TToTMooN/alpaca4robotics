@@ -24,7 +24,7 @@ import utils
 import fire
 
 
-def encode_task_generation_prompt(prompt_file_name="./prompts/robot_task_prompt.txt"):
+def encode_task_generation_prompt(prompt_file_name="./prompts_for_gpt/robot_task_prompt.txt"):
     """Encode prompt for task generation into a single string."""
     prompt = open(prompt_file_name).read() + "\n"
     # TODO: add seeded tasks
@@ -129,7 +129,7 @@ def encode_instruct_prompt(
     functions,
     examples,
     subskill_data=None,
-    prompt_file_name="./prompts/robot_instruction_prompt.txt",
+    prompt_file_name="./prompts_for_gpt/robot_instruction_prompt.txt",
 ):
     """Encode prompt for instruction following pairs into a single string."""
     prompt = open(prompt_file_name).read() + "\n"
@@ -217,15 +217,12 @@ def post_process_chat_response(response):
             action_output = output_splitted_data[4].strip()
             ##### FILTER OUT Negative Examples #####
             # filter out too short or too long instructions
-            if len(inst.split()) <= 3 or len(inst.split()) > 150:
+            if len(inst.split()) <= 3 or len(inst.split()) > 200:
+                print(splitted_data, len(inst.split()))
+
                 continue
             # filter based on keywords that are not suitable for language models.
             # filter those starting with punctuation
-            if inst[0] in string.punctuation:
-                continue
-            # filter those starting with non-english character
-            if not inst[0].isascii():
-                continue
             instructions.append(
                 {
                     "task": task,
@@ -292,9 +289,10 @@ def post_process_chat_response_gorilla_format(response):
 
 def generate_instruction_following_chat_data(
     output_dir="./gpt4_generation/",
-    seed_tasks_path="./prompts/seeded_tasks.jsonl",
-    seed_example_path="./prompts/seeded_example.jsonl",
-    function_file_path="./prompts/skill_functions.jsonl",
+    instruction_prompt_file="./prompts_for_gpt/robot_instruction_prompt.txt",
+    seed_tasks_path="./prompts_for_gpt/seeded_tasks.jsonl",
+    seed_example_path="./prompts_for_gpt/seeded_example.jsonl",
+    function_file_path="./prompts_for_gpt/skill_functions.jsonl",
     subskill_data_path="./subtask_data/",
     num_instructions_to_generate=1,
     model_name="gpt-4",
@@ -302,6 +300,7 @@ def generate_instruction_following_chat_data(
     request_batch_size=1,
     temperature=1.0,
     top_p=1.0,
+    output_file="instruct_regen.json",
     num_cpus=8,
 ):
     ### Load the seed tasks. ###
@@ -314,9 +313,9 @@ def generate_instruction_following_chat_data(
 
     ### load the LM-generated previous instructions. ###
     machine_instruction_data = []
-    if os.path.exists(os.path.join(output_dir, "instruct_regen.json")):
+    if os.path.exists(os.path.join(output_dir, output_file)):
         machine_instruction_data = utils.jload(
-            os.path.join(output_dir, "instruct_regen.json")
+            os.path.join(output_dir, output_file)
         )
         print(f"Loaded {len(machine_instruction_data)} machine-generated instructions")
     ### load subskill data ###
@@ -342,7 +341,7 @@ def generate_instruction_following_chat_data(
     progress_bar = tqdm.tqdm(total=num_instructions_to_generate)
     if machine_instruction_data:
         progress_bar.update(len(machine_instruction_data))
-
+    start_task_index = 0
     while len(machine_instruction_data) < num_instructions_to_generate:
         request_idx += 1
 
@@ -351,7 +350,8 @@ def generate_instruction_following_chat_data(
             # only sampling from the seed tasks
             # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
             prompt = encode_instruct_prompt(
-                tasks=seed_tasks,
+                prompt_file_name=instruction_prompt_file,
+                tasks=seed_tasks[start_task_index:start_task_index+2],
                 functions=functions,
                 # subskill_data=subskill_data,
                 examples=seed_instructions,
@@ -360,7 +360,7 @@ def generate_instruction_following_chat_data(
         decoding_args = utils.OpenAIChatDecodingArguments(
             temperature=temperature,
             top_p=top_p,
-            max_tokens=4096,
+            max_tokens=6000,
             stop=["\n21", "21."],
         )
         request_start_time = time.time()
@@ -387,8 +387,10 @@ def generate_instruction_following_chat_data(
         print(f"Request {request_idx} took {request_duration:.2f}s")
         print(f"Generated {total} instructions, kept {keep} instructions")
         utils.jdump(
-            machine_instruction_data, os.path.join(output_dir, "instruct_regen.json")
+            machine_instruction_data, os.path.join(output_dir, output_file)
         )
+        start_task_index += 2
+    return chatcompletions
 
 def main(task, **kwargs):
     globals()[task](**kwargs)

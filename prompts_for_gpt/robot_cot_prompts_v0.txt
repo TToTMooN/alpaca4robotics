@@ -11,8 +11,8 @@ There are two blocks, {block A} and {block B}, with randomized sizes and density
 The Franka robot has a force sensor on the end effector.
 The Franka robot is mounted on a table.
 The blocks are initialized at a random position on the table.
-The observation space is a 26 dimension vector, consisting of:
-block A position(3), block A orientation(4), block B position(3), block B orientation(4), end effector position(3), end effector orientation(4), end effector force(3), left finger position(1), right finger position(1) 
+The observation space is a 29 dimension vector, consisting of:
+block A position(3), block A orientation(4), block B position(3), block B orientation(4), end effector position(3), end effector orientation(4), left finger position(1), right finger position(1), left finger force(3), right finger force(3)   
 
 The robot is given a long horizon task: {TASK}. 
 The instructions and responses happen when the robot is trying to solve this specific {TASK}, and ask a chatbot guider.
@@ -42,8 +42,9 @@ Below is the list of {FUNCTION}s provided in the robot skill library in this env
 {TRAJECTORY_PLACEHOLDER}
 
 Here are some basic requirements for the generated instructions:
-1. The instructions should be in English.
-2. The index of instructions for different tasks are continous. For example, if the last instruction for task 1 is 10, the first instruction for task 2 should be 11.
+1. A GPT language model should be able to complete the instruction. For example, do not ask the assistant to create any visual or audio output. For another example, do not ask the assistant to wake you up at 5pm or set a reminder because it cannot perform any action.
+2. The instructions should be in English.
+3. The index of instructions for different tasks are continous. For example, if the last instruction for task 1 is 10, the first instruction for task 2 should be 11.
 3. The i-th response for task {TASK} need to satisfy the following format: 
 // start of instruction pair i, not including this line.
 ###

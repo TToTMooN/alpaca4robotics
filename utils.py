@@ -272,8 +272,8 @@ def old_inst_json_to_gorilla_form_json(olf_file_path, new_file_path):
     new_instructions = []
     for inst in instructions:
         code = f""
-        code += f"###Instruction: {inst['instruction']}\n"
-        # code += f"###Input: {inst['input']}\n"
+        code += f"###Instruction: Task[{inst['task']}]\n{inst['instruction']}\n"
+        code += f"###Input: {inst['input']}\n"
         output = f""
         output += f"'explanation': {inst['verbal_output']}, 'code': {inst['action_output']}"
         code += f"###Output: {{{output}}}\n"
@@ -285,4 +285,3 @@ def old_inst_json_to_gorilla_form_json(olf_file_path, new_file_path):
             }
         )
     jdump(new_instructions, new_file_path)
-    return new_instructions
