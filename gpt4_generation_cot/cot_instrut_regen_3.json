@@ -1,0 +1,653 @@
+[
+    {
+        "task": "Identify and pick up the lighter block and move it to the opposite end of the table.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.45, 0.18, 1.0, 0, 0, 0, 1, 0.55, 0.82, 1.0, 0, 0, 0, 1, 0.5, 0.5, 1.5, 0, 0, 0, 1, -0.3, 0.3, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. We don't know the weight of the blocks, need to infer weight first.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Identify and pick up the lighter block and move it to the opposite end of the table.",
+        "instruction": "Prev:\n(A_1: No. We don't know the weight of the blocks, need to infer weight first.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.45, 0.18, 1.0, 0, 0, 0, 1, 0.55, 0.82, 1.0, 0, 0, 0, 1, 0.5, 0.5, 1.5, 0, 0, 0, 1, 0, 0, -1, 0, 1, 0, 0, 1]",
+        "verbal_output": "The robot will reach to grasp block A and B to infer their weight.",
+        "action_output": "[grasp('BlockA'), grasp('BlockB')]."
+    },
+    {
+        "task": "Identify and pick up the lighter block and move it to the opposite end of the table.",
+        "instruction": "Prev:\n(A_2: The robot will reach to grasp block A and B to infer their weight.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.45, 0.18, 1.0, 0, 0, 0, 1, 0.55, 0.82, 1.0, 0, 0, 0, 1, 0.5, 0.5, 1.5, 0, 0, 0, 1, 0.7, 0.7, 0, 2, -1, 3, -2, -1]",
+        "verbal_output": "The robot will pick up Block A, since it's lighter based on the force sensor data, and move it to the opposite end of the table.",
+        "action_output": "[grasp('BlockA'), move_to([0.55,-0.82,1.0])]."
+    },
+    {
+        "task": "Identify and pick up the lighter block and move it to the opposite end of the table.",
+        "instruction": "Prev:\n(A_3: The robot will pick up Block A, since it's lighter based on the force sensor data, and move it to the opposite end of the table.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.55, -0.82, 1.0, 0, 0, 0, 1, 0.55, 0.82, 1.0, 0, 0, 0, 1, 0.55, -0.82, 1.5, 0, 0, 0, 1, 0.7, 0.7, 0, 1, 0, 1, 0, 1]",
+        "verbal_output": "The robot will place Block A at the new location.",
+        "action_output": "[place('BlockA', [0.55, -0.82, 1.0])]."
+    },
+    {
+        "task": "Identify and pick up the lighter block and move it to the opposite end of the table.",
+        "instruction": "Prev:\n(A_4: The robot will place Block A at the new location.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.55, -0.82, 1.0, 0, 0, 0, 1, 0.55, 0.82, 1.0, 0, 0, 0, 1, 0.55, -0.82, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The task is completed. The robot doesn't need to take any more actions.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.35, 0.12, 1.0, 0, 0, 0, 1, 0.65, 0.88, 1.0, 0, 0, 0, 1, 0.5, 0.5, 1.5, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes, the current information is enough, the location and orientation of blocks and end effector are known.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height.",
+        "instruction": "Prev:\n(A_6: Yes, the current information is enough, the location and orientation of blocks and end effector are known.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.12, 1.0, 0, 0, 0, 1, 0.65, 0.88, 1.0, 0, 0, 0, 1, 0.5, 0.5, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The robot needs to first grasp Block A, then place it on top of Block B.",
+        "action_output": "[grasp('BlockA'), place('BlockA', [0.65, 0.88, 2.0])]."
+    },
+    {
+        "task": "Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height.",
+        "instruction": "Prev:\n(A_7: The robot needs to first grasp Block A, then place it on top of Block B.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.65, 0.88, 2.0, 0, 0, 0, 1, 0.65, 0.88, 1.0, 0, 0, 0, 1, 0.65, 0.88, 2.5, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot has successfully placed Block A on top of Block B, task is completed.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height.",
+        "instruction": "Prev:\n(A_8: The robot has successfully placed Block A on top of Block B, task is completed.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.65, 0.88, 2.0, 0, 0, 0, 1, 0.65, 0.88, 1.0, 0, 0, 0, 1, 0.65, 0.88, 2.5, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The task is completed. The robot doesn't need to take any more actions.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Methodically stack block A on top of block B regardless of their weight, in an attempt to maximize their combined height.",
+        "instruction": "Prev:\n(A_9: The task is completed. The robot doesn't need to take any more actions.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.65, 0.88, 2.0, 0, 0, 0, 1, 0.65, 0.88, 1.0, 0, 0, 0, 1, 0.65, 0.88, 2.5, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The task is completed. The robot doesn't need to take any more actions.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Pick and hold block A and shake it gently without dropping it to understand the nature and density of the block's material.*",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, precise location coordination of block A is required for the safe and effective execution of this task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Pick and hold block A and shake it gently without dropping it to understand the nature and density of the block's material.*",
+        "instruction": "Prev:\n(A_1: No, precise location coordination of block A is required for the safe and effective execution of this task.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.21, 0.31, 1.025, 0, 0, 0, 1, 0.36, 0.51, 1.025, 0, 0, 0, 1, 0.1, 0.1, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Reach and grasp block A to evaluate it's initial weight.",
+        "action_output": "[reach([0.21, 0.31, 1.025]), grasp('blockA')]."
+    },
+    {
+        "task": "Pick and hold block A and shake it gently without dropping it to understand the nature and density of the block's material.*",
+        "instruction": "Prev:\n(A_2: Reach and grasp block A to evaluate it's initial weight.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.21, 0.31, 1.025, 0, 0, 0, 1, 0.36, 0.51, 1.025, 0, 0, 0, 1, 0.1, 0.1, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "To shimmer block A for evaluating the material and density, the robot gently move up and down.",
+        "action_output": "[move_to([0.21, 0.31, 1.125]), move_to([0.21, 0.31, 1.025])]."
+    },
+    {
+        "task": "Using the force sensor, apply a specific amount of force against block B, moving it a certain distance across the table.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.65, 1.025, 0, 0, 0, 1, 0.35, 0.9, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, the robot needs to reach and grasp block B to apply a force to it.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Using the force sensor, apply a specific amount of force against block B, moving it a certain distance across the table.",
+        "instruction": "Prev:\n(A_4: No, the robot needs to reach and grasp block B to apply a force to it.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.21, 0.66, 1.025, 0, 0, 0, 1, 0.36, 0.91, 1.025, 0, 0, 0, 1, 0.1, 0.1, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Reach and grasp block B to apply force.",
+        "action_output": "[reach([0.21, 0.66, 1.025]), grasp('blockB')]."
+    },
+    {
+        "task": "Experiment with picking up both the blocks at the same time, maintaining the grip throughout without dropping any block.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. The information about position, orientation and force needs to be considered in combination for successful simultaneous pick up.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Experiment with picking up both the blocks at the same time, maintaining the grip throughout without dropping any block.",
+        "instruction": "Prev:\n(A_1: No. The information about position, orientation and force needs to be considered in combination for successful simultaneous pick up.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "Now, the robot should reach near to both the blocks, align the parallel gripper with the blocks, and register the detailed positions and orientations.",
+        "action_output": "[reach([0.2,0.3,1.02]), reach([0.35,0.5,1.02])]."
+    },
+    {
+        "task": "Experiment with picking up both the blocks at the same time, maintaining the grip throughout without dropping any block.",
+        "instruction": "Prev:\n(A_2: Now, the robot should reach near to both the blocks, align the parallel gripper with the blocks, and register the detailed positions and orientations.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Now, the robot should pick up both blocks A and B simultaneously and maintain the grip for some time without dropping any block.",
+        "action_output": "[grasp(\"blockA\"), grasp(\"blockB\")]."
+    },
+    {
+        "task": "Arrange the blocks parallel to each other with the longer sides facing each other, irrespective of the block size.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes. The information about position and orientation of blocks is enough to solve the task. The force is not required.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Arrange the blocks parallel to each other with the longer sides facing each other, irrespective of the block size.",
+        "instruction": "Prev:\n(A_1: Yes. The information about position and orientation of blocks is enough to solve the task. The force is not required.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Now, the robot should pick up each block in sequence, and place them such that the longer sides face each other and the blocks are parallel.",
+        "action_output": "[grasp(\"blockA\"), move_to([0.35, 0.4, 1.025]), place(\"blockA\", [0.35, 0.4, 1.025]), grasp(\"blockB\"), place(\"blockB\", [0.35, 0.6, 1.025])]."
+    },
+    {
+        "task": "Tilt block B to a 45-degree angle without moving it off the table",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. I still need the information about the mass of Block B, the friction coefficients, and the orientation of effectors so that I can tilt it without sliding.",
+        "action_output": "<nooutput>"
+    },
+    {
+        "task": "Tilt block B to a 45-degree angle without moving it off the table",
+        "instruction": "Prev:\n(A_1: No. I still need the information about the mass of Block B, the friction coefficients, and the orientation of effectors so that I can tilt it without sliding.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "We need to grasp Block B and try to move it gently to infer the mass and the friction.",
+        "action_output": "[grasp('blockB'), move_to([0.35, 0.50, 1.05])]"
+    },
+    {
+        "task": "Tilt block B to a 45-degree angle without moving it off the table",
+        "instruction": "Prev:\n(A_1: No. I still need the information about the mass of Block B, the friction coefficients, and the orientation of effectors so that I can tilt it without sliding.)\n(A_2: We need to grasp Block B and try to move it gently to infer the mass and the friction.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.50, 1.05, 0, 0, 0, 1, 0.35, 0.50, 1.05, 0, 0, 0, 1, 0.35, 0.50, 1.05, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "Now I can reach the top of Block B and apply a tilt force using the end effector.",
+        "action_output": "[reach([0.35, 0.50, 1.075])]"
+    },
+    {
+        "task": "Tilt block B to a 45-degree angle without moving it off the table",
+        "instruction": "Prev:\n(A_3: Now I can reach the top of Block B and apply a tilt force using the end effector.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.50, 1.075, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.35, 0.50, 1.075, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "Now I should slide the end effector to apply a tilting force to Block B.",
+        "action_output": "[move_to([0.35, 0.50, 1.05])]"
+    },
+    {
+        "task": "Tilt block B to a 45-degree angle without moving it off the table",
+        "instruction": "Prev:\n(A_4: Now I should slide the end effector to apply a tilting force to Block B.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.50, 1.05, 0, 0, 0, 1, 0.35, 0.50, 1.075, -0.7071, 0, 0, 0.7071, 0.35, 0.50, 1.05, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The block is already tilted to about 45 degrees. Now I can release the grasp of the end effector.",
+        "action_output": "[place('blockB', [0.35, 0.5, 1.025])]"
+    },
+    {
+        "task": "With the help of the end effector, try to flip block A upside down to show its bottom surface",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.3, 0.3, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. We don't have information about the weight of block A and its current orientation. We need to acquire these first before flipping the block upside down.",
+        "action_output": "<nooutput>"
+    },
+    {
+        "task": "With the help of the end effector, try to flip block A upside down to show its bottom surface",
+        "instruction": "Prev:\n(A_6: No. We don't have information about the weight of block A and its current orientation. We need to acquire these first before flipping the block upside down.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.2, 0.3, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot needs to grasp block A, this will allow it to infer the weight of the block.",
+        "action_output": "[grasp('blockA')]"
+    },
+    {
+        "task": "With the help of the end effector, try to flip block A upside down to show its bottom surface",
+        "instruction": "Prev:\n(A_7: The robot needs to grasp block A, this will allow it to infer the weight of the block.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.2, 0.3, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "We can first lift block A to a certain height, then rotate it by 180 degrees to flip it upside down.",
+        "action_output": "[reach([0.2, 0.3, 1.15]), move_to([0.2, 0.3, 1.15], [0, 1, 0, 0])]"
+    },
+    {
+        "task": "With the help of the end effector, try to flip block A upside down to show its bottom surface",
+        "instruction": "Prev:\n(A_8: We can first lift block A to a certain height, then rotate it by 180 degrees to flip it upside down.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.15, 0, 1, 0, 0, 0.35, 0.5, 1.025, -1, 0, 0, 0, 0.20, 0.30, 1.15, 0, 1, 0, 0, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "Now, I can place block A back on the table with its bottom surface showing.",
+        "action_output": "[place('blockA', [0.20, 0.3, 1.025])]"
+    },
+    {
+        "task": "Identify the larger block based on size and place it on the smaller block in order to create a steady balance.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.01, 0, 0, 0, 1, 0.35, 0.5, 1.01, 0, 0, 0, 1, 0.0, 0.0, 1.5, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, the current information is not enough to solve the task. We need to know the size of block A and block B.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Identify the larger block based on size and place it on the smaller block in order to create a steady balance.",
+        "instruction": "Prev:\n(A_1: No, the current information is not enough to solve the task. We need to know the size of block A and block B.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.01, 0, 0, 0, 1, 0.35, 0.5, 1.01, 0, 0, 0, 1, 0.0, 0.0, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "We need to reach to the position of Block A and B and grasp them to infer the size of the blocks.",
+        "action_output": "[reach([0.20, 0.30, 1.01]), grasp('blockA'), reach([0.35, 0.5, 1.01]), grasp('blockB')]."
+    },
+    {
+        "task": "Identify the larger block based on size and place it on the smaller block in order to create a steady balance.",
+        "instruction": "Prev:\n(A_2: We need to reach to the position of Block A and B and grasp them to infer the size of the blocks.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.01, 0, 0, 0, 1, 0.35, 0.5, 1.01, 0, 0, 0, 1, 0.0, 0.0, 1.5, 0, 0, 0, 1, 0.1, 0.1, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "We will place the larger block which is block A on the top of the smaller block which is block B.",
+        "action_output": "[place('blockA', [0.35, 0.5, 1.01])]."
+    },
+    {
+        "task": "Stack block B on top of block A in a way that the blocks align perfectly with each other without any part hanging at the edges.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.02, 0, 0, 0, 1, 0.25, 0.45, 1.02, 0, 0, 0, 1, 0.0, 0.0, 1.5, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, the current information is not enough to solve the task. We need to know the physical dimensions of block A and block B to ensure they align perfectly.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Stack block B on top of block A in a way that the blocks align perfectly with each other without any part hanging at the edges.",
+        "instruction": "Prev:\n(A_4: No, the current information is not enough to solve the task. We need to know the physical dimensions of block A and block B to ensure they align perfectly.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.02, 0, 0, 0, 1, 0.25, 0.45, 1.02, 0, 0, 0, 1, 0, 0, 1.5, 0, 0, 0, 1, 0, 0, 0, 0, -0.5, 0, 0, -0.5]",
+        "verbal_output": "We will reach and grasp both blocks to infer their sizes and dimensions.",
+        "action_output": "[reach([0.20, 0.30, 1.02]), grasp('blockA'), reach([0.25, 0.45, 1.02]), grasp('blockB')]."
+    },
+    {
+        "task": "Pick up block A and place it on the opposite side of the table.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "",
+        "verbal_output": "Yes, we currently have all the necessary information to solve the task as we know the positions of both the blocks and the robot.",
+        "action_output": "<nooutput>\n\nInstruction pair 2:"
+    },
+    {
+        "task": "Pick up block A and place it on the opposite side of the table.",
+        "instruction": "Prev:\n(A_1: Yes, we currently have all the necessary information to solve the task as we know the positions of both the blocks and the robot.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, -0.15, 1.025, 0, 0, 0, 1, 0.30, 0.20, 1.025, 0, 0, 0, 1, 0.0, -0.2, 1.50, 0, 0, 0, 1, 0.3, 0.4, 0, 0, 0, 1, 2, 2]",
+        "verbal_output": "We first reach the position of block A, grasp it and then move to the opposite side of the table to place it.",
+        "action_output": "[reach([0.20, -0.15, 1.025]), grasp('blockA'), move_to([-0.20, 0.15, 1.025]), place('blockA', [-0.20, 0.15, 1.025])]\n\nTask {'task': \"Stack block B on top of block A without altering block A's original position*.\"}\n\nInstruction pair 4:"
+    },
+    {
+        "task": "Stack block B on top of block A without altering block A's original position.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "",
+        "verbal_output": "Yes, we currently have all the necessary information to solve the task as we know the positions of both the blocks and the robot.",
+        "action_output": "<nooutput>.\n\nInstruction pair 5:"
+    },
+    {
+        "task": "Stack block B on top of block A without altering block A's original position.",
+        "instruction": "Prev:\n(A_4: Yes, we currently have all the necessary information to solve the task as we know the positions of both the blocks and the robot.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, -0.15, 1.025, 0, 0, 0, 1, 0.30, 0.20, 1.025, 0, 0, 0, 1, 0.0, -0.2, 1.50, 0, 0, 0, 1, 0.3, 0.4, 0, 0, 0, 1, 2, 2]",
+        "verbal_output": "We first reach the position of block B, grasp it, move over to block A and place block B onto block A.",
+        "action_output": "[reach([0.30, 0.20, 1.025]), grasp('blockB'), move_to([0.20, -0.15, 1.025+0.02]), place('blockB', [0.20, -0.15, 1.025+0.02])]."
+    },
+    {
+        "task": "Using the end effector, tap block A three times without moving block B from its initial location",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.05, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.40, 1.025, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. The current information is not enough because we don't know the position directly above block A where the end effector has to reach to tap block A.",
+        "action_output": "<nooutput>.\n```"
+    },
+    {
+        "task": "Using the end effector, tap block A three times without moving block B from its initial location",
+        "instruction": "Prev:\n(A_1: No. The current information is not enough because we don't know the position directly above block A where the end effector has to reach to tap block A.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.05, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.40, 1.025, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0]",
+        "verbal_output": "The robot needs to get the position of block A and also the position above block A where it has to tap.",
+        "action_output": "[reach([0.20, 0.30, 1.15])]\n```"
+    },
+    {
+        "task": "Using the end effector, tap block A three times without moving block B from its initial location",
+        "instruction": "Prev:\n(A_2: The robot needs to get the position of block A and also the position above block A where it has to tap.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.05, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.40, 1.15, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0]",
+        "verbal_output": "Now, the robot should move the end effector down to tap block A, then move up again. This up and down movement should be done three times to tap the block three times.",
+        "action_output": "[move_to([0.20, 0.30, 1.05]), move_to([0.20, 0.30, 1.15]), move_to([0.20, 0.30, 1.05]), move_to([0.20, 0.30, 1.15]), move_to([0.20, 0.30, 1.05]), move_to([0.20, 0.30, 1.15])]\n```"
+    },
+    {
+        "task": "Slide block B around the table's surface for a total distance of one meter",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.05, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.40, 1.025, 0, 0, 0, 1, 0, 0 ,0 ,0, 0 ,0 ,0 ,0]",
+        "verbal_output": "No. We need to know the position where the end effector should be to grasp block B.",
+        "action_output": "<nooutput>.\n```"
+    },
+    {
+        "task": "Slide block B around the table's surface for a total distance of one meter",
+        "instruction": "Prev:\n(A_4: No. We need to know the position where the end effector should be to grasp block B.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.05, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.40, 1.025, 0, 0, 0, 1, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0]",
+        "verbal_output": "The robot should reach the position of block B to grasp it.",
+        "action_output": "[reach([0.35, 0.5, 1.025])]\n```"
+    },
+    {
+        "task": "Pick up block A and rotate it 360 degrees in the gripper before placing it down at its original position",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.3, 0.2, 0.1, 0, 0, 0, 1, 0.5, 0.7, 0.1, 0, 0, 0, 1, 0.1, 0.1, 0.1, 0, 0, 0, 1, -0.2, 0.2, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes, we have all the necessary information to complete the task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Pick up block A and rotate it 360 degrees in the gripper before placing it down at its original position",
+        "instruction": "Prev:\n(A_1: Yes, we have all the necessary information to complete the task.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.3, 0.2, 0.1, 0, 0, 0, 1, 0.5, 0.7, 0.1, 0, 0, 0, 1, 0.1, 0.1, 0.1, 0, 0, 0, 1, -0.2, 0.2, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "We will first reach the end effector to block A. Then we will grasp block A.",
+        "action_output": "[reach([0.3, 0.2, 0.1]), grasp('blockA')]."
+    },
+    {
+        "task": "Pick up block A and rotate it 360 degrees in the gripper before placing it down at its original position",
+        "instruction": "Prev:\n(A_1: Yes, we have all the necessary information to complete the task.)\n(A_2: We will first reach the end effector to block A. Then we will grasp block A.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.3, 0.2, 0.1, 0, 0, 0, 1, 0.5, 0.7, 0.1, 0, 0, 0, 1, 0.1, 0.1, 0.1, 0, 0, 0, 1, -0.2, 0.2, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "We will rotate block A 360 degrees in the gripper.",
+        "action_output": "[move_to([0.3, 0.2, 0.1+0.5], [0, 0, 0, 1]), move_to([0.3, 0.2, 0.1+0.5], [0, 0, 1, 0]), move_to([0.3, 0.2, 0.1], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Pick up block A and rotate it 360 degrees in the gripper before placing it down at its original position",
+        "instruction": "Prev:\n(A_1: Yes, we have all the necessary information to complete the task.)\n(A_2: We will first reach the end effector to block A. Then we will grasp block A.)\n(A_3: We will rotate block A 360 degrees in the gripper.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.3, 0.2, 0.1, 0, 0, 0, 1, 0.5, 0.7, 0.1, 0, 0, 0, 1, 0.1, 0.1, 0.1, 0, 0, 0, 1, -0.2, 0.2, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "We will then place block A to its original position.",
+        "action_output": "[place('blockA', [0.3, 0.2, 0.1])]."
+    },
+    {
+        "task": "Pick up block A and rotate it 360 degrees in the gripper before placing it down at its original position",
+        "instruction": "Prev:\n(A_1: Yes, we have all the necessary information to complete the task.) \n(A_2: We will first reach the end effector to block A. Then we will grasp block A.) \n(A_3: We will rotate block A 360 degrees in the gripper.) \n(A_4: We will then place block A to its original position.) \nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.3, 0.2, 0.1, 0, 0, 0, 1, 0.5, 0.7, 0.1, 0, 0, 0, 1, 0.1, 0.1, 0.1, 0, 0, 0, 1, -0.2, 0.2, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Return to the initial state.",
+        "action_output": "[reset()]."
+    },
+    {
+        "task": "Pick up block A and place it directly on top of block B, stacked perfectly upright.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0.35, 0.45, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. I don't know where block B's top surface is. I need to check it.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Pick up block A and place it directly on top of block B, stacked perfectly upright.",
+        "instruction": "Prev:\n(A_1: No. I don't know where block B's top surface is. I need to check it.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.15, 0.30, 1.50, 0, 0, 0, 1, 0.35, 0.45, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should plan to reach above the block B without touching it to gather the required information.",
+        "action_output": "[reach([0.35, 0.5, 1.125], [0,0,0,1] )]."
+    },
+    {
+        "task": "Pick up block A and place it directly on top of block B, stacked perfectly upright.",
+        "instruction": "Prev:\n(A_1: No. I don't know where block B's top surface is. I need to check it.)\n(A_2: The robot should plan to reach above the block B without touching it to gather the required information.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.325, 0, 0, 0, 1, 0.35, 0.5, 1.55, 0, 0, 0, 1, 0.35, 0.45, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should pick up block A, lift it, and place it perfectly upright on top of block B.",
+        "action_output": "[grasp(A), move_to([0.20, 0.30, 1.125], [0,0,0,1]), place(A, [0.35, 0.5, 1.325], [0,0,0,1])]."
+    },
+    {
+        "task": "Use the parallel gripper to hand over block A from one side of the workspace to the other side in a straight line.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.50, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.65, 0.30, 1.50, 0, 0, 0, 1, 0.35, 0.45, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes, I have all needed information to solve the task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Use the parallel gripper to hand over block A from one side of the workspace to the other side in a straight line.",
+        "instruction": "Prev:\n(A_4: Yes, I have all needed information to solve the task.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.50, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.65, 0.30, 1.50, 0, 0, 0, 1, 0.35, 0.45, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should reach to block A, grasp it and move it to the other side of the workspace in a straight line.",
+        "action_output": "[reach( [0.50, 0.30, 1.125], [0,0,0,1] ), grasp(A), move_to([0.20, 0.30, 1.125], [0,0,0,1])]."
+    },
+    {
+        "task": "Squeeze block A with increasing force without lifting it, until the force reading on the end effector reaches a pre-set level*.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.07, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.7, 1.025, 0, 0, 0, 1, 0.0, 0.0, 0.90, 0, 0, 0, 1, -0.35, -0.15, 0, -2, 0, 0, -2, -2]",
+        "verbal_output": "Yes, the current information is enough to solve the task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Squeeze block A with increasing force without lifting it, until the force reading on the end effector reaches a pre-set level*.",
+        "instruction": "Prev:\n(A_1: Yes, the current information is enough to solve the task.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.07, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.7, 1.025, 0, 0, 0, 1, 0.07, 0.30, 0.90, 0, 0, 0, 1, 0.0, 0.0, -3, -3, 0, 0, -3, -3]",
+        "verbal_output": "Grasp block A and apply increasing pressure until the force reading is reached.",
+        "action_output": "[grasp('block A')]."
+    },
+    {
+        "task": "Squeeze block A with increasing force without lifting it, until the force reading on the end effector reaches a pre-set level*.",
+        "instruction": "Prev:\n(A_2: Grasp block A and apply increasing pressure until the force reading is reached.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.07, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.7, 1.025, 0, 0, 0, 1, 0.07, 0.30, 0.90, 0, 0, 0, 1, 0.07, 0.13, -5, -5, -4, -3, -3, -1]",
+        "verbal_output": "Keep squeezing block A.",
+        "action_output": "[grasp('block A')]."
+    },
+    {
+        "task": "Squeeze block A with increasing force without lifting it, until the force reading on the end effector reaches a pre-set level*.",
+        "instruction": "Prev:\n(A_3: Keep squeezing block A.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.07, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.7, 1.025, 0, 0, 0, 1, 0.07, 0.30, 0.90, 0, 0, 0, 1, 0.07, 0.12, -7, -7, -4, -3, -4, -1]",
+        "verbal_output": "The force on end effectors has reached the required reading. Release block A.",
+        "action_output": "[grasp('null')]."
+    },
+    {
+        "task": "Squeeze block A with increasing force without lifting it, until the force reading on the end effector reaches a pre-set level*.",
+        "instruction": "Prev:\n(A_4: The force on end effectors has reached the required reading. Release block A.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.07, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.7, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The task has been completed.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Switch places of blocks A and B, ensuring that the blocks end in the same orientation they began with*.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0.0, 0.0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes, the current information is enough to proceed with the swapping of block A and B.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Switch places of blocks A and B, ensuring that the blocks end in the same orientation they began with*.",
+        "instruction": "Prev:\n(A_6: Yes, the current information is enough to proceed with the swapping of block A and B.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0.0, 0.0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Grasp block A and move to a temporary location.",
+        "action_output": "[grasp('block A'), move_to([0.5, 0.5, 1.025], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Switch places of blocks A and B, ensuring that the blocks end in the same orientation they began with*.",
+        "instruction": "Prev:\n(A_7: Grasp block A and move to a temporary location.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.50, 0.50, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.20, 0.30, 1.50, 0, 0, 0, 1, 0.2, 0.1, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Now, grasp block B and place it at the initial location of block A.",
+        "action_output": "[grasp('block B'), place('block B', [0.20, 0.30, 1.025], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Switch places of blocks A and B, ensuring that the blocks end in the same orientation they began with*.",
+        "instruction": "Prev:\n(A_8: Now, grasp block B and place it at the initial location of block A.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.20, 0.30, 1.025, 0, 0, 0, 1, 0.50, 0.50, 1.025, 0, 0, 0, 1, 0.0, 0.0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Finally, grasp block A and place it at the initial location of block B.",
+        "action_output": "[grasp('block A'), place('block A', [0.35, 0.5, 1.025], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Switch places of blocks A and B, ensuring that the blocks end in the same orientation they began with*.",
+        "instruction": "Prev:\n(A_9: Finally, grasp block A and place it at the initial location of block B.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.5, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0.0, 0.0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The task has been completed.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Stack block A on top of block B without inducing a net force change exceeding 5N on the force sensor.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "",
+        "verbal_output": "No, we need to know the current position and orientation of the blocks and the end effector, we also need to know whether the initial gripper finger positions are appropriate for grasping.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Stack block A on top of block B without inducing a net force change exceeding 5N on the force sensor.",
+        "instruction": "Prev:\n(A_1: No, we need to know the current position and orientation of the blocks and the end effector, we also need to know whether the initial gripper finger positions are appropriate for grasping.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 0, 0, 0, 1, 1.5, 1.5, 1.5, 0, 0, 0, 1, 0.5, 0.5, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot does not need to take any specific action to collect more data, as the current observation space already provided the required information.",
+        "action_output": "[]."
+    },
+    {
+        "task": "Stack block A on top of block B without inducing a net force change exceeding 5N on the force sensor.",
+        "instruction": "Prev:\n(A_2: The robot does not need to take any specific action to collect more data, as the current observation space already provided the required information.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 0, 0, 0, 1, 1.5, 1.5, 1.5, 0, 0, 0, 1, 0.5, 0.5]",
+        "verbal_output": "The task can be divided into several steps: \n1. Grasp block A.\n2. Lift block A above block B.\n3. Place block A on block B.",
+        "action_output": "[grasp('block A'), move_to([2, 2, 3]), place('block A', [2, 2, 2])]."
+    },
+    {
+        "task": "Repeatedly hand over block A from the left gripper to the right gripper without dropping it.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "",
+        "verbal_output": "No, we need to know the current position and orientation of block A, the end effector, and the current force on the fingers.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Repeatedly hand over block A from the left gripper to the right gripper without dropping it.",
+        "instruction": "Prev:\n(A_4: No, we need to know the current position and orientation of block A, the end effector, and the current force on the fingers.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 0, 0, 0, 1, 1.5, 1.5, 1.5, 0, 0, 0, 1, 0.5, 0.5, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot does not need to take any specific action to collect more data, as the current observation space already provided the required information.",
+        "action_output": "[]."
+    },
+    {
+        "task": "Repeatedly hand over block A from the left gripper to the right gripper without dropping it.",
+        "instruction": "Prev:\n(A_5: The robot does not need to take any specific action to collect more data, as the current observation space already provided the required information.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[1, 1, 1, 0, 0, 0, 1, 2, 2, 2, 0, 0, 0, 1, 1.5, 1.5, 1.5, 0, 0, 0, 1, 0.5, 0.5]",
+        "verbal_output": "Reaching the block with the left gripper, grasp the block, handing over to the right gripper, and release the block.",
+        "action_output": "[reach([1, 1, 1]), grasp('block A'), move_to([1.5, 1.5, 1.5]), grasp('block A'), move_to([1, 1, 1]), reach([1, 1, 1])]."
+    },
+    {
+        "task": "Move block B to the edge of the table and bring it back to the center without tipping it over.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.50, 0.30, 1.025, 0, 0, 0, 1, 0.55, 0.5, 1.05, 0, 0, 0, 1, 0.4, 0.5, 1.2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The current information has details about the blocks and the robot orientation, which should be enough to solve the task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Move block B to the edge of the table and bring it back to the center without tipping it over.",
+        "instruction": "Prev:\n(A_1: The current information has details about the blocks and the robot orientation, which should be enough to solve the task.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.50, 0.30, 1.025, 0, 0, 0, 1, 0.55, 0.5, 1.05, 0, 0, 0, 1, 0.4, 0.5, 1.2, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "First reach out to block B, grasp it, move it to the edge of the table, then bring it back to the center.",
+        "action_output": "[reach([0.55, 0.5, 1.05], [0, 0, 0, 1]), grasp('blockB'), move_to([0.65, 0.5, 1.05], [0, 0, 0, 1]), move_to([0.50, 0.5, 1.05], [0, 0, 0, 1]), place('blockB', [0.50, 0.5, 1.025], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Exchange the positions of the two blocks without touching the table.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.15, 0.20, 1.015, 0, 0, 0, 1, 0.65, 0.80, 1.035, 0, 0, 0, 1, 0.3, 0.4, 1.18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The current information about the blocks and the robot orientation is sufficient to perform the task.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Exchange the positions of the two blocks without touching the table.",
+        "instruction": "Prev:\n(A_3: The current information about the blocks and the robot orientation is sufficient to perform the task.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.15, 0.20, 1.015, 0, 0, 0, 1, 0.65, 0.80, 1.035, 0, 0, 0, 1, 0.3, 0.4, 1.18, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Reach out to block B first, move it to a temporary position, then reach out to block A and place it at B's location, finally move block B to A's original location.",
+        "action_output": "[reach([0.65, 0.80, 1.035], [0, 0, 0, 1]), grasp('blockB'), place('blockB', [0.75, 0.90, 1.035], [0, 0, 0, 1]), reach([0.15, 0.20, 1.015], [0, 0, 0, 1]), grasp('blockA'), place('blockA', [0.65, 0.80, 1.035], [0, 0, 0, 1]), reach([0.75, 0.90, 1.035], [0, 0, 0, 1]), grasp('blockB'), place('blockB', [0.15, 0.20, 1.015], [0, 0, 0, 1])]."
+    },
+    {
+        "task": "Arrange block B in a position relative to block A, where both are balanced on opposing corners.*",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.30, 0.20, 1.025, 0, 0, 0, 1, 0.50, 0.35, 1.025, 0, 0, 0, 1, 0.15, 0.0, 1.50, 0, 0, 0, 1, 0.35, -0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, the exact size and position for arrangement is missing. We need to calculate that.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Arrange block B in a position relative to block A, where both are balanced on opposing corners.*",
+        "instruction": "Prev:\n(A_1: No, the exact size and position for arrangement is missing. We need to calculate that.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.40, 0.15, 1.025, 0, 0, 0, 1, 0.35, 0.50, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should measure the size of block A and block B by reaching to them. Then calculate the relative position.",
+        "action_output": "[reach([0.30, 0.20, 1.025]), reach([0.50, 0.35, 1.025])]."
+    },
+    {
+        "task": "Arrange block B in a position relative to block A, where both are balanced on opposing corners.*",
+        "instruction": "Prev:\n(A_1: No, the exact size and position for arrangement is missing. We need to calculate that.)\n(A_2: The robot should measure the size of block A and block B by reaching to them. Then calculate the relative position.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.35, 0.30, 1.025, 0, 0, 0, 1, 0.45, 0.25, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should grasp block B, move it to the calculated position relative to block A and then release it.",
+        "action_output": "[grasp('block B'), place('block B', [0.55, 0.30, 1.025])]."
+    },
+    {
+        "task": "Rotate block A 180 degrees around its center axis without changing its position on the table.*",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.15, 0.25, 1.025, 0, 0, 0, 1, 0.45, 0.35, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "Yes, the current position and orientation of block A is enough to perform the rotation.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Rotate block A 180 degrees around its center axis without changing its position on the table.*",
+        "instruction": "Prev:\n(A_11: Yes, the current position and orientation of block A is enough to perform the rotation.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.25, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.25, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot should first grasp block A, then rotate it by 180 degrees around its center axis, and then place it back to its original position.",
+        "action_output": "[grasp('block A'), place('block A', [0.25, 0.30, 1.025], [0, 1, 0, 0])]."
+    },
+    {
+        "task": "Determine the heavier block by lifting each block by a certain height. Then place the lighter block on top of the heavier one.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.25, 0.35, 1.025, 0, 0, 0, 1, 0.4, 0.55, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No, the weight of the blocks is not apparent from the current information, it needs to be inferred first.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Determine the heavier block by lifting each block by a certain height. Then place the lighter block on top of the heavier one.",
+        "instruction": "Prev:\n(A_1: No, the weight of the blocks is not apparent from the current information, it needs to be inferred first.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.25, 0.35, 1.025, 0, 0, 0, 1, 0.4, 0.55, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The robot must grasp and lift both blocks A and B to infer their weight.",
+        "action_output": "['grasp(\"blockA\")', 'grasp(\"blockB\")']."
+    },
+    {
+        "task": "Determine the heavier block by lifting each block by a certain height. Then place the lighter block on top of the heavier one.",
+        "instruction": "Prev:\n(A_1: No, the weight of the blocks is not apparent from the current information, it needs to be inferred first.)\n(A_2: The robot must grasp and lift both blocks A and B to infer their weight.)\nIs the current information enough to solve the task?",
+        "input": "[0.25, 0.35, 1.03, 0, 0, 0, 1, 0.4, 0.55, 1.03, 0, 0, 0, 1, 0.0, 0.0, 1.55, 0, 0, 0, 1, 10, 10, -5, -5, 0, 0, 0, 0]",
+        "verbal_output": "Yes, we have lifted both blocks and can tell block A is heavier and B is lighter by the force sensor reading.",
+        "action_output": "<nooutput>"
+    },
+    {
+        "task": "Determine the heavier block by lifting each block by a certain height. Then place the lighter block on top of the heavier one.",
+        "instruction": "Prev:\n(A_1: No, the weight of the blocks is not apparent from the current information, it needs to be inferred first.)\n(A_2: The robot must grasp and lift both blocks A and B to infer their weight.)\n(A_3: Yes, we have lifted both blocks and can tell block A is heavier and B is lighter by the force sensor reading.)\nWhat actions should the robot take to solve the task?",
+        "input": "[0.25, 0.35, 1.03, 0, 0, 0, 1, 0.4, 0.55, 1.03, 0, 0, 0, 1, 0.0, 0.0, 1.55, 0, 0, 0, 1, 10, 10, -5, -5, 0, 0, 0, 0]",
+        "verbal_output": "The robot should place Block B on top of Block A.",
+        "action_output": "['place(\"blockB\",[0.25, 0.35, 1.03])']."
+    },
+    {
+        "task": "Determine the heavier block by lifting each block by a certain height. Then place the lighter block on top of the heavier one.",
+        "instruction": "Prev:\n(A_1: No, the weight of the blocks is not apparent from the current information, it needs to be inferred first.)\n(A_2: The robot must grasp and lift both blocks A and B to infer their weight.)\n(A_3: Yes, we have lifted both blocks and can tell block A is heavier and B is lighter by the force sensor reading.)\n(A_4: The robot should place Block B on top of Block A.)\nWhat actions should the robot take to solve the task?",
+        "input": "[0.25, 0.35, 1.03, 0, 0, 0, 1, 0.4, 0.55, 1.33, 0, 0, 0, 1, 0.0, 0.0, 1.55, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "The robot has successfully placed Block B on top of Block A. The task is complete.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Position block B such that its center of mass is directly over the center of block A.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. We don't know the exact position of the center of block A. We also need to move the robot to a grasping position above block B.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Position block B such that its center of mass is directly over the center of block A.",
+        "instruction": "Prev:\n(A_1: No. We don't know the exact position of the center of block A. We also need to move the robot to a grasping position above block B.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The robot should grasp the block B and move the robot above block A's current position.",
+        "action_output": "[grasp(blockB), move_to([0.20, 0.30, 1.25])]."
+    },
+    {
+        "task": "Position block B such that its center of mass is directly over the center of block A.",
+        "instruction": "Prev:\n(A_2: The robot should grasp the block B and move the robot above block A's current position)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.2, 0.3, 1.25, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "Now, we can position block B directly over block A's center by grasping it and move it above block A.",
+        "action_output": "[place(blockB, [0.20, 0.30, 1.025])]."
+    },
+    {
+        "task": "Determine the most stable orientation for block A by placing it at different orientations and recording the force on the force sensor.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. we need to know the recorded force sensor outputs for each orientation of the block A to make a decision.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Determine the most stable orientation for block A by placing it at different orientations and recording the force on the force sensor.",
+        "instruction": "Prev:\n(A_4: No. we need to know the recorded force sensor outputs for each orientation of the block A to make a decision.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The robot should grasp block A and place it at different orientations. This would require repeating the grasp-place sequence for the various orientations.",
+        "action_output": "[grasp(blockA), place(blockA, [0.20, 0.30, 1.025], [0, 0, 0, 1]), grasp(blockA), place(blockA, [0.20, 0.30, 1.025], [0.5, 0.5, 0.5, 0.5])]"
+    },
+    {
+        "task": "Stack block A on top of block B regardless of their weight.",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.2, 0.3, 1.02, 0, 0, 0, 1, 0.35, 0.5, 1.02, 0, 0, 0, 1, 0.0, 0.0, 0.5, 0, 0, 0, 1, -0.3, 0.3, -1, -1, 0, 0, 0, 0]",
+        "verbal_output": "No, we don't know the exact positions of the blocks, just their rough coordinates. We need to find the exact coordinates to plan precise movements.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Stack block A on top of block B regardless of their weight.",
+        "instruction": "Prev:\n(A_1: No, we don't know the exact positions of the blocks, just their rough coordinates. We need to find the exact coordinates to plan precise movements.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.2, 0.3, 1.02, 0, 0, 0, 1, 0.35, 0.5, 1.02, 0, 0, 0, 1, 0.0, 0.0, 1.5, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0, 0, 0]",
+        "verbal_output": "The robot should move to both block A and B's position to confirm their exact positions.",
+        "action_output": "[move_to([0.2, 0.3, 1.02]), move_to([0.35, 0.5, 1.02])]."
+    },
+    {
+        "task": "Stack block A on top of block B regardless of their weight.",
+        "instruction": "Prev:\n(A_2: The robot should move to both block A and B's position to confirm their exact positions.)\nWhat are the actions the robot should take to solve the task?",
+        "input": "[0.2, 0.303, 1.021, 0, 0, 0, 1, 0.352, 0.52, 1.024, 0, 0, 0, 1, 0.2, 0.303, 1.48, 0, 0, 0, 1, -0.32, 0.321, 0, -1.1, -1.2, -0.25, -0.3, -0.45]",
+        "verbal_output": "Now we've confirmed the coordinates. The robot can grasp block A, move to block B's position and place A on top of B.",
+        "action_output": "[grasp('blockA'), move_to([0.352, 0.52, 1.024]), place('blockA', [0.352, 0.52, 1.5])]"
+    },
+    {
+        "task": "Drop the heavier block on top of the lighter one such that the lighter block sustains minimum damage.*",
+        "instruction": "Is the current information enough to solve the task? If not, what information is missing?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, -0.35, 0.35, 0, 0, 0, 0, 0, 0]",
+        "verbal_output": "No. We don't know which block is heavier, we need to infer their weights first.",
+        "action_output": "<nooutput>."
+    },
+    {
+        "task": "Drop the heavier block on top of the lighter one such that the lighter block sustains minimum damage.*",
+        "instruction": "Prev:\n(A_1: No. We don't know which block is heavier, we need to infer their weights first.)\nWhat are the actions the robot should take to gather information?",
+        "input": "[0.20, 0.30, 1.025, 0, 0, 0, 1, 0.35, 0.5, 1.025, 0, 0, 0, 1, 0.0, 0.0, 1.50, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, -1]",
+        "verbal_output": "The robot should first execute grasping actions on both block A and B to sense their weights.",
+        "action_output": "[grasp('blockA'), grasp('blockB')]."
+    }
+]

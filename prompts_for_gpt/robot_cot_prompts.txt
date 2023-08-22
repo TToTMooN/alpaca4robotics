@@ -29,7 +29,7 @@ The {instruction} of each task consists should consists of the following standar
 1. Is the current information enough to solve the task? If not, what information is missing?
 2. What are the actions the robot should take to gather information?
 3. What are the actions the robot should take to solve the task?
-For the 1st question, the <action> output part should be <nooutput>, only <verbal> output is important. For the other questions, both <verbal> and <action> output parts are important.
+For the 1st question, the <action> output part should be <nooutput>, only <verbal> output is important. The robot should ask this every time it collects new information. For the other questions, both <verbal> and <action> output parts are important.
 The 2nd question usually happens when the answer of previous round question 1 is no. The 3rd question usually happens when the answer of previous round question 1 is yes.
 There can be different answers to the same question depending on different observation and previous collected information, but the answers should be reasonable. You can imagine the robot is facing different situations when asking the questions.
 
@@ -56,11 +56,12 @@ i.
 [action] {list of function output}
 // end of instruction pair i, not including this line.
 
-4. The format of {instruction}: If it is first round, then it's just one of the questions listed above. If it's not the first round, then it should be the question attached with the previous N step outputs "Prev:\n(A_j:{output}_j)\n" where j=1, ..., N at the begining of instruction. 
-5. The format of {input} will be a vector of robot observation. The input should involve all the states in the robot obvervation. Use actual numbers in the generated instruction pairs.
-6. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
-7. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
-8. Generate exact 5 instruction pair data for each task.
+4. You are expected to generate the full chain of thoughts instructions for each task from initial condition until the task is solved. You need to generate the instructions in order. Generate instructions for task 1 first, then task 2, ..., task N. If the task in hard or need to collect information, you need to generate multi-turn instructions.
+5. The format of {instruction}: It's usually one of the questions listed above. If it's not the first round, you can assume the historical round answers and the observations after previous actions for the same {TASK} are provided. 
+6. The format of {input} will be a vector of robot observation. The input should involve all the states in the robot obvervation. Use actual numbers in the generated instruction pairs.
+7. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
+8. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
 9. Each instruction pair should be separated by a line of "###" at the beginning.
+10. Each task should have at most 10 instruction pairs.
 
-Examples of instruction pairs are given below. Note that this could be instructions under different {TASK}s. You need to modify the instruction pairs according to the {TASK}.
+Examples of instruction pairs for a single turn are given below. Note that this could be instructions under different {TASK}s in different rounds. You need to modify the instruction pairs according to the {TASK}.
