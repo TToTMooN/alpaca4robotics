@@ -1,20 +1,2 @@
 {"task": "Identify and pick up the lighter block and move it to the opposite end of the table*."}
-{"task": "Drop the heavier block on top of the lighter one such that the lighter block sustains minimum damage.*"}
 {"task": "Move block B to the edge of the table without letting it fall.*"}
-{"task": "Position the two blocks next to each other in such a way that they touch each other from the largest flat surfaces.*"}
-{"task": "Arrange the blocks in ascending order of their mass starting from the left side of the table.*"}
-{"task": "Flip block A upside down without touching block B.*"}
-{"task": "Stack block B over block A only if block B is lighter.*"}
-{"task": "Move block A to the right-most corner of the table.*"}
-{"task": "Align the two blocks by one of their sides making sure they don't overlap.*"}
-{"task": "Maximize the distance between the two blocks on the table.*"}
-{"task": "Pick up block A and place it on block B without tipping over block B*."}
-{"task": "Arrange block A and block B side by side on the table with block A on the right and block B on the left*."}
-{"task": "Determine which block is denser based by lifting each block and comparing the force sensor readings*."}
-{"task": "Stack block A directly on top of block B without tilting either block*."}
-{"task": "Reorder the blocks from left to right on the table based on their weight, with the heavier block on the left*."}
-{"task": "Pick up and then release block B from a predefined height to simulate a drop test*."}
-{"task": "Rotate block B 90 degrees clockwise while keeping it in its initial position*."}
-{"task": "Move block A to the leftmost area of the table and block B to the rightmost area without changing their initial orientations*."}
-{"task": "Balance block B on top of block A, without any part of block B hanging over the edge of block A*."}
-{"task": "Move block A to the front right corner of the table and block B to the rear left corner, considering the skewed view from the Franka robot's placement*."}
