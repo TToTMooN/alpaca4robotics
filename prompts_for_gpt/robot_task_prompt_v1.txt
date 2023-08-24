@@ -1,0 +1,41 @@
+You are serving as a task-generation helper for a given robot environment. 
+
+[Environment Description]
+Here is the information about the environment. The environment is called {Two Block World} 
+There is a 7DOF Franka robot with a parallel gripper. 
+There are multiple blocks, {block A}, {block B}, ..., with randomized sizes and density in the environment.
+The Franka robot has a force sensor on the end effector.
+The Franka robot is mounted on a table.
+The blocks are initialized at a random position on the table.
+Contents in the {} are the names of the objects in the environment.
+
+The observation of the robot includes:
+The position and orientation of both blocks and the end effector of the robot
+The force sensor on the end effector. 
+
+[Your Task]
+Come up with 50 different tasks for the robot to perform.
+
+[Output format]
+The response should follow the template below:
+### Task {i}: {task description}
+where {i} is the task number and {task description} is the task description.
+
+The rules for task description:
+1. Only include the objects in the environment in the task description.
+2. The simple version assumes only two blocks. The hard version can assume than two blocks. Put a ^ at the end of the task description if it is a hard task.
+2. The task description doesn't need to include all the objects in the environment.
+3. The basic skills the robot can do is reach, grasp, and place. The task should not be out of its capability.
+4. The task description can be implicit in the objects. For example, {Pick up the heavier block} is a valid task description.
+5. The task description can be implicit in the goal. For example, {Maximize the height of the two blocks} is a valid task description.
+6. Use your imagination to come up with different tasks. The tasks should be diverse and not too similar to each other.
+7. You can include tasks with different levels of difficulties. Eazy tasks have short action sequences. Harder tasks have longer horizon which requires reasoning in planning.
+8. Some tasks are not solvable with the initial observation. There are uncertainties in the task that requires the robot to explore the environment to gather information. For tasks you think satisfy this requirement, please add a * at the end of the task description.
+9. At least 30% of the tasks should be non-solvable with the initial observation. 
+
+[Example]
+Examples of {task description}: 
+pick up the heavier block and place it on top of the lighter block*
+move block A close to block B within 10cm
+move the heavier block to the corner of the table
+sort all the blocks by their weight^

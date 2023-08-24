@@ -69,6 +69,7 @@ def post_process_task_response(response):
 
 def generate_task_data(
     output_dir="./gpt4_generation/",
+    prompt_file_name="./prompts_for_gpt/robot_task_prompt_v0.txt",
     num_tasks_to_generate=1,
     model_name="gpt-4",
     request_batch_size=1,
@@ -89,7 +90,7 @@ def generate_task_data(
 
         batch_input = []
         for _ in range(request_batch_size):
-            prompt = encode_task_generation_prompt()
+            prompt = encode_task_generation_prompt(prompt_file_name)
             batch_input.append(prompt)
         decoding_args = utils.OpenAIChatDecodingArguments(
             temperature=temperature,

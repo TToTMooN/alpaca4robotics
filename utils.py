@@ -21,6 +21,7 @@ StrOrOpenAIObject = Union[str, openai_object.OpenAIObject]
 #     logging.warning(f"Switching to organization: {openai_org} for OAI API key.")
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
 @dataclasses.dataclass
 class OpenAIDecodingArguments(object):
     max_tokens: int = 1800
@@ -35,6 +36,7 @@ class OpenAIDecodingArguments(object):
     logprobs: Optional[int] = None
     echo: bool = False
 
+
 @dataclasses.dataclass
 class OpenAIChatDecodingArguments(object):
     max_tokens: int = 1280
@@ -46,6 +48,7 @@ class OpenAIChatDecodingArguments(object):
     presence_penalty: float = 0.0
     frequency_penalty: float = 0.0
 
+
 def openai_completion(
     prompts: Union[str, Sequence[str], Sequence[dict[str, str]], dict[str, str]],
     decoding_args: OpenAIDecodingArguments,
@@ -56,7 +59,11 @@ def openai_completion(
     max_batches=sys.maxsize,
     return_text=False,
     **decoding_kwargs,
-) -> Union[StrOrOpenAIObject, Sequence[StrOrOpenAIObject], Sequence[Sequence[StrOrOpenAIObject]],]:
+) -> Union[
+    StrOrOpenAIObject,
+    Sequence[StrOrOpenAIObject],
+    Sequence[Sequence[StrOrOpenAIObject]],
+]:
     """Decode with OpenAI API.
 
     Args:
@@ -113,7 +120,9 @@ def openai_completion(
                     **batch_decoding_args.__dict__,
                     **decoding_kwargs,
                 )
-                completion_batch = openai.Completion.create(prompt=prompt_batch, **shared_kwargs)
+                completion_batch = openai.Completion.create(
+                    prompt=prompt_batch, **shared_kwargs
+                )
                 choices = completion_batch.choices
 
                 for choice in choices:
@@ -123,8 +132,12 @@ def openai_completion(
             except openai.error.OpenAIError as e:
                 logging.warning(f"OpenAIError: {e}.")
                 if "Please reduce your prompt" in str(e):
-                    batch_decoding_args.max_tokens = int(batch_decoding_args.max_tokens * 0.8)
-                    logging.warning(f"Reducing target length to {batch_decoding_args.max_tokens}, Retrying...")
+                    batch_decoding_args.max_tokens = int(
+                        batch_decoding_args.max_tokens * 0.8
+                    )
+                    logging.warning(
+                        f"Reducing target length to {batch_decoding_args.max_tokens}, Retrying..."
+                    )
                 else:
                     logging.warning("Hit request rate limit; retrying...")
                     time.sleep(sleep_time)  # Annoying rate limit on requests.
@@ -133,11 +146,15 @@ def openai_completion(
         completions = [completion.text for completion in completions]
     if decoding_args.n > 1:
         # make completions a nested list, where each entry is a consecutive decoding_args.n of original entries.
-        completions = [completions[i : i + decoding_args.n] for i in range(0, len(completions), decoding_args.n)]
+        completions = [
+            completions[i : i + decoding_args.n]
+            for i in range(0, len(completions), decoding_args.n)
+        ]
     if is_single_prompt:
         # Return non-tuple if only 1 input and 1 generation.
         (completions,) = completions
     return completions
+
 
 def openai_chatcompletion(
     prompts: Union[str, Sequence[str], Sequence[dict[str, str]], dict[str, str]],
@@ -147,7 +164,11 @@ def openai_chatcompletion(
     max_instances=sys.maxsize,
     return_text=False,
     **decoding_kwargs,
-) -> Union[StrOrOpenAIObject, Sequence[StrOrOpenAIObject], Sequence[Sequence[StrOrOpenAIObject]],]:
+) -> Union[
+    StrOrOpenAIObject,
+    Sequence[StrOrOpenAIObject],
+    Sequence[Sequence[StrOrOpenAIObject]],
+]:
     """Decode with OpenAI API.
 
     Args:
@@ -175,7 +196,6 @@ def openai_chatcompletion(
     if is_single_prompt:
         prompts = [prompts]
 
-
     prompts = prompts[:max_instances]
     print("###", prompts)
     num_prompts = len(prompts)
@@ -194,7 +214,8 @@ def openai_chatcompletion(
                     **decoding_kwargs,
                 )
                 chat_response = openai.ChatCompletion.create(
-                    messages=prompt, **shared_kwargs)
+                    messages=prompt, **shared_kwargs
+                )
                 choices = chat_response.choices
 
                 for choice in choices:
@@ -204,18 +225,25 @@ def openai_chatcompletion(
             except openai.error.OpenAIError as e:
                 logging.warning(f"OpenAIError: {e}.")
                 if "Please reduce your prompt" in str(e):
-                    batch_decoding_args.max_tokens = int(batch_decoding_args.max_tokens * 0.8)
-                    logging.warning(f"Reducing target length to {batch_decoding_args.max_tokens}, Retrying...")
+                    batch_decoding_args.max_tokens = int(
+                        batch_decoding_args.max_tokens * 0.8
+                    )
+                    logging.warning(
+                        f"Reducing target length to {batch_decoding_args.max_tokens}, Retrying..."
+                    )
                 else:
                     logging.warning("Hit request rate limit; retrying...")
                     time.sleep(sleep_time)  # Annoying rate limit on requests.
 
     if return_text:
-        chatcompletions = [completion['message']['content'] for completion in chatcompletions]
+        chatcompletions = [
+            completion["message"]["content"] for completion in chatcompletions
+        ]
     if is_single_prompt:
         # Return non-tuple if only 1 input and 1 generation.
         (chatcompletions,) = chatcompletions
     return chatcompletions
+
 
 def _make_w_io_base(f, mode: str):
     if not isinstance(f, io.IOBase):
@@ -259,29 +287,53 @@ def jload(f, mode="r"):
     f.close()
     return jdict
 
+
 def json2jsonl(json_file, jsonl_file):
     """Convert a json file to a jsonl file."""
     with open(json_file, "r") as f:
         data = json.load(f)
     with open(jsonl_file, "w") as f:
         for item in data:
-            f.write(json.dumps(item) + '\n')
+            f.write(json.dumps(item) + "\n")
 
-def old_inst_json_to_gorilla_form_json(olf_file_path, new_file_path):
-    instructions = jload(olf_file_path)
+
+def old_inst_json_to_gorilla_form_json(old_file_path, new_file_path):
+    instructions = jload(old_file_path)
     new_instructions = []
     for inst in instructions:
         code = f""
         code += f"###Instruction: Task[{inst['task']}]\n{inst['instruction']}\n"
         code += f"###Input: {inst['input']}\n"
         output = f""
-        output += f"'explanation': {inst['verbal_output']}, 'code': {inst['action_output']}"
+        output += (
+            f"'explanation': {inst['verbal_output']}, 'code': {inst['action_output']}"
+        )
         code += f"###Output: {{{output}}}\n"
         new_instructions.append(
             {
                 "code": code,
                 "task": inst["task"],
                 "input": inst["input"],
+            }
+        )
+    jdump(new_instructions, new_file_path)
+
+
+def full_inst_json_to_full_form_json(old_file_path, new_file_path):
+    instructions = jload(old_file_path)
+    new_instructions = []
+    for inst in instructions:
+        # Standard form: instruction, input, output.
+        instruction = f"Environment: Two blocks with random size and mass on the table.\nTask: {inst['task']}\n{inst['instruction']}\n"
+        input = f"{inst['input']}\n"
+        output = (
+            f"Explanation: {inst['verbal_output']}\nActions: {inst['action_output']}"
+        )
+        new_instructions.append(
+            {
+                "instruction": instruction,
+                "input": input,
+                "output": output,
             }
         )
     jdump(new_instructions, new_file_path)
