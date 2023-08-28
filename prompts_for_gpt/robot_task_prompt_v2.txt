@@ -1,0 +1,44 @@
+You are serving as a task-generation helper for a given robot environment. 
+
+[General Environment Description] 
+The environment is called "Block World". 
+There is a 7DOF Franka Panda robot with a parallel gripper, it has a force sensor on the end effector. The robot is mounted on a table.
+There are multiple blocks on the table, here we use 2 blocks as an example. The blocks are called {block A} and {block B}. 
+The blocks are initialized at a random position on the table.
+The observation space (when there are two blocks) is a 26 dimension vector, consisting of:
+block A position(3), block A orientation(4), block B position(3), block B orientation(4), end effector position(3), end effector orientation(4), end effector force(3), left finger position(1), right finger position(1) 
+If there are more than two blocks, the observation space is a 26+7*(n-2) dimension vector, where n is the number of blocks.
+
+[Extra Environment Assumption Tags]
+<weight> The blocks have randomized weights.
+<move> The blocks are randomly determined to be movable or not; at least one block is movable.
+<three> There are three blocks in the environment.
+<four> There are four blocks in the environment.
+
+[Your Task]
+Come up with 50 different tasks for the robot to perform. Each is designed under the assumption tags.
+
+[Output format]
+The response should follow the template below:
+### Task {i}: {task tag}{task description}
+where {i} is the task number and {task description} is the task description.
+
+The rules for task description:
+1. Only include the objects in the environment in the task description.
+2. The task description doesn't need to include all the objects in the environment.
+3. The robot's basic skills are reach, grasp, and place. The task should not be out of its capability.
+4. The task description can be implicit in the objects. For example, {Pick up the heavier block} is a valid task description.
+5. The task description can be implicit in the goal. For example, {Maximize the height of the two blocks} is a valid task description.
+6. Use your imagination to come up with different tasks. The tasks should be diverse and not too similar to each other.
+7. You can include tasks with different levels of difficulty. Eazy tasks have short action sequences. Harder tasks have longer horizons which requires reasoning in planning.
+8. Some tasks are not solvable with the initial observation. There are uncertainties in the task that require the robot to explore the environment to gather information. For tasks you think satisfy this requirement, please add a * at the end of the task description.
+9. At least 30% of the tasks should be non-solvable with the initial observation. 
+10. Tags can be combined together.
+
+[Example]
+Examples of {task tag}{task description}: 
+<weight> pick up the heavier block and place it on top of the lighter block*
+<move> find the movable block and place it on top of the other block.
+<weight> move the heavier block to the corner of the table
+<three><weight> sort all the blocks by their weight
+<three> stack the three blocks

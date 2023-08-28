@@ -57,9 +57,6 @@ def post_process_task_response(response):
         if len(task.split()) <= 3 or len(task.split()) > 150:
             continue
         # filter based on keywords that are not suitable for language models.
-        # filter those starting with punctuation
-        if task[0] in string.punctuation:
-            continue
         # filter those starting with non-english character
         if not task[0].isascii():
             continue
@@ -158,16 +155,23 @@ def encode_instruct_prompt(
     # optional: add example trajectory of subskills
     if subskill_data is not None:
         subskill_data_string_to_replace = ""
-        subskill_data_string_to_replace += f"Below is some example trajectories of the robot executing the functions in the skill library:\n"
+        subskill_data_string_to_replace += \
+            f"Below is starting and ending observation of the robot executing the provided skills:\n"
         for data in subskill_data:
             skill_name = data["skill_name"]
             skill_description = data["skill_description"]
             skill_trajectory = data["skill_trajectory"]
+            first_observation = skill_trajectory[0]
+            last_observation = skill_trajectory[-1]
+
             subskill_data_string_to_replace += f"'''\n"
             subskill_data_string_to_replace += f"{skill_name}\n"
             subskill_data_string_to_replace += f"{skill_description}\n"
             subskill_data_string_to_replace += f"'''\n"
-            subskill_data_string_to_replace += f"{skill_trajectory}\n"
+            subskill_data_string_to_replace += f"Starting observation:\n"
+            subskill_data_string_to_replace += f"{first_observation}\n"
+            subskill_data_string_to_replace += f"Ending observation:\n"
+            subskill_data_string_to_replace += f"{last_observation}\n"
         prompt = prompt.replace(trajectory_placeholder, subskill_data_string_to_replace)
 
     # Add examples of instruction pairs
@@ -297,7 +301,7 @@ def generate_instruction_following_chat_data(
     subskill_data_path="./subtask_data/",
     num_instructions_to_generate=1,
     model_name="gpt-4",
-    num_prompt_instructions=0,
+    num_of_tasks_each_request=2,
     request_batch_size=1,
     temperature=1.0,
     top_p=1.0,
@@ -352,7 +356,7 @@ def generate_instruction_following_chat_data(
             # prompt_instructions = random.sample(seed_instruction_data, num_prompt_instructions)
             prompt = encode_instruct_prompt(
                 prompt_file_name=instruction_prompt_file,
-                tasks=seed_tasks[start_task_index:start_task_index+2],
+                tasks=seed_tasks[start_task_index:start_task_index+num_of_tasks_each_request],
                 functions=functions,
                 # subskill_data=subskill_data,
                 examples=seed_instructions,
@@ -361,7 +365,7 @@ def generate_instruction_following_chat_data(
         decoding_args = utils.OpenAIChatDecodingArguments(
             temperature=temperature,
             top_p=top_p,
-            max_tokens=6000,
+            max_tokens=5000,
             stop=["\n21", "21."],
         )
         request_start_time = time.time()
@@ -390,7 +394,7 @@ def generate_instruction_following_chat_data(
         utils.jdump(
             machine_instruction_data, os.path.join(output_dir, output_file)
         )
-        start_task_index += 2
+        start_task_index += num_of_tasks_each_request
     return chatcompletions
 
 def main(task, **kwargs):

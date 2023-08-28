@@ -324,10 +324,10 @@ def full_inst_json_to_full_form_json(old_file_path, new_file_path):
     new_instructions = []
     for inst in instructions:
         # Standard form: instruction, input, output.
-        instruction = f"Environment: Two blocks with random size and mass on the table.\nTask: {inst['task']}\n{inst['instruction']}\n"
-        input = f"{inst['input']}\n"
+        instruction = formulate_robot_instruction(inst)
+        input = formulate_robot_input(inst)
         output = (
-            f"Explanation: {inst['verbal_output']}\nActions: {inst['action_output']}"
+            f"EXPLAIN: {inst['verbal_output']}\nACTION: {inst['action_output']}"
         )
         new_instructions.append(
             {
@@ -337,3 +337,17 @@ def full_inst_json_to_full_form_json(old_file_path, new_file_path):
             }
         )
     jdump(new_instructions, new_file_path)
+
+def formulate_robot_input(instruction):
+    # Formulate string input into descriptive input for smaller models to handle.
+    input = instruction["input"]
+    return f"{input}\n"
+
+def formulate_robot_instruction(inst):
+    inst_str = f""
+    inst_str += f"Environment: Franka Panda robot with blocks on the table.\n"
+    inst_str += f"Task: {inst['task']}\n"
+    inst_str += f"{inst['instruction']}\n"
+
+    return inst_str
+        
