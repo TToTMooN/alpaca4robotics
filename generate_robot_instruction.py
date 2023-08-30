@@ -156,22 +156,17 @@ def encode_instruct_prompt(
     if subskill_data is not None:
         subskill_data_string_to_replace = ""
         subskill_data_string_to_replace += \
-            f"Below is starting and ending observation of the robot executing the provided skills:\n"
+            f"Ending observation of the robot finishing the provided skills:\n"
         for data in subskill_data:
             skill_name = data["skill_name"]
-            skill_description = data["skill_description"]
-            skill_trajectory = data["skill_trajectory"]
-            first_observation = skill_trajectory[0]
-            last_observation = skill_trajectory[-1]
+            skill_params = data["params"]
+            skill_last_obs = data["last_obs"]
 
             subskill_data_string_to_replace += f"'''\n"
-            subskill_data_string_to_replace += f"{skill_name}\n"
-            subskill_data_string_to_replace += f"{skill_description}\n"
+            subskill_data_string_to_replace += f"Skill name: {skill_name}\n"
+            subskill_data_string_to_replace += f"Parameters: {skill_params}\n"
+            subskill_data_string_to_replace += f"Final Obs: {skill_last_obs}\n"
             subskill_data_string_to_replace += f"'''\n"
-            subskill_data_string_to_replace += f"Starting observation:\n"
-            subskill_data_string_to_replace += f"{first_observation}\n"
-            subskill_data_string_to_replace += f"Ending observation:\n"
-            subskill_data_string_to_replace += f"{last_observation}\n"
         prompt = prompt.replace(trajectory_placeholder, subskill_data_string_to_replace)
 
     # Add examples of instruction pairs
@@ -298,7 +293,8 @@ def generate_instruction_following_chat_data(
     seed_tasks_path="./prompts_for_gpt/seeded_tasks.jsonl",
     seed_example_path="./prompts_for_gpt/seeded_example.jsonl",
     function_file_path="./prompts_for_gpt/skill_functions.jsonl",
-    subskill_data_path="./subtask_data/",
+    subskill_data_path="./subtask_data/sub_skill_example_data.json",
+    use_sub_skill_data=False,
     num_instructions_to_generate=1,
     model_name="gpt-4",
     num_of_tasks_each_request=2,
@@ -324,23 +320,18 @@ def generate_instruction_following_chat_data(
         )
         print(f"Loaded {len(machine_instruction_data)} machine-generated instructions")
     ### load subskill data ###
-    subskill_data = []
-    if os.path.exists(subskill_data_path):
-        for file in os.listdir(subskill_data_path):
-            file_name = os.path.splitext(file)[0]
-            data = {"skill_name": "", "skill_description": ""}
-            data["skill_name"] = file_name
-            data[
-                "skill_description"
-            ] = "Start at initial position, ending with skill finished successfully."
-            skill_trajectory = utils.jload(os.path.join(subskill_data_path, file))
-            # downsample the trajectory to 5 steps
-            num_of_steps = len(skill_trajectory)
-            if num_of_steps > 5:
-                skill_trajectory = skill_trajectory[:: num_of_steps // 5]
-            data["skill_trajectory"] = skill_trajectory
+    if use_sub_skill_data:
+        subskill_data = []
+        examples = utils.jload(subskill_data_path)
+        for example in examples:
+            data = {"skill_name": "", "params": ""}
+            data["skill_name"] = example["function_name"]
+            data["params"] = example["params"] if example["params"] is not None else ""
+            data["last_obs"] = example["last_obs"]
             # add data name and description
-            subskill_data += data
+            subskill_data.append(data)
+    else:
+        subskill_data = None
 
     # now let's generate new instructions!
     progress_bar = tqdm.tqdm(total=num_instructions_to_generate)
@@ -358,7 +349,7 @@ def generate_instruction_following_chat_data(
                 prompt_file_name=instruction_prompt_file,
                 tasks=seed_tasks[start_task_index:start_task_index+num_of_tasks_each_request],
                 functions=functions,
-                # subskill_data=subskill_data,
+                subskill_data=subskill_data,
                 examples=seed_instructions,
             )
             batch_input.append(prompt)
