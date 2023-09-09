@@ -134,6 +134,7 @@ def encode_instruct_prompt(
     task_placeholder = "{TASK_LIST_PLACEHOLDER}"
     function_placeholder = "{FUNCTION_LIST_PLACEHOLDER}"
     trajectory_placeholder = "{TRAJECTORY_PLACEHOLDER}"
+    instruction_example_placeholder = "{INSTRUCTION_EXAMPLE_PLACEHOLDER}"
     # Add task names as a list
     task_string_to_replace = ""
     for idx, task in enumerate(tasks):
@@ -183,9 +184,13 @@ def encode_instruct_prompt(
         example_string += f" <Instruction> {instruction}\n"
         example_string += f" <Input> {input}\n"
         example_string += f" <Output> \n{output}\n"
-    prompt += example_string
+    prompt = prompt.replace(instruction_example_placeholder, example_string)
     # make it gpt-4 format
-    message = [{"role": "user", "content": prompt}]
+    # System prompt: Environment information, prompt before [Tasks to solve]
+    # User prompt: In-context examples.
+    system_prompt = prompt.split("[Tasks to solve]")[0]
+    user_prompt = prompt.split("[Tasks to solve]")[1]
+    message = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_prompt}]
     return message
 
 
@@ -357,7 +362,6 @@ def generate_instruction_following_chat_data(
             temperature=temperature,
             top_p=top_p,
             max_tokens=5000,
-            stop=["\n21", "21."],
         )
         request_start_time = time.time()
         chatcompletions = utils.openai_chatcompletion(

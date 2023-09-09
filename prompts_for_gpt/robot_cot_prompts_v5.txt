@@ -10,7 +10,7 @@ There are multiple blocks on tha table, here we use 2 blocks as example. The blo
 The blocks are initialized at a random position on the table.
 The observation space (when there are two blocks) is a 26 dimension vector, consisting of:
 block A position(3), block A orientation(4), block B position(3), block B orientation(4), end effector position(3), end effector orientation(4), end effector force(3), left finger position(1), right finger position(1) 
-If there are more than two blocks, the observation space is a 26+7*(n-2) dimension vector, where n is the number of blocks.
+If there are more than two blocks, the observation space is a 12+7*n dimension vector, where n is the number of blocks.
 
 [Extra Environment Assumption Tags]
 <weight> The blocks have randomized weight.
@@ -38,19 +38,8 @@ For the other questions, both <verbal> and <action> output parts are important. 
 When generating instruction data, please imagine the observation and previous collected information for the robot, and generate the corresponding {input} and {output}.
 There can be different responses to the same question depending on different {input}, imagine different scenarios and generate different responses. 
 
-[Tasks to solve]
-Below is the list of {TASK}s used in the generated instructions:
-{TASK_LIST_PLACEHOLDER}
-
-[Function Lists in skill library]
-{FUNCTION_LIST_PLACEHOLDER}
-
-[Example trajectories]
-Below is some example trajectories(sequence of obs) when executing some skills. Use them as reference for observations when generating instructions.
-{TRAJECTORY_PLACEHOLDER}
-
 [Format of generated instructions]
-1. The i-th response need to satisfy the following format, i starts from 1. 
+1. The i-th response need to satisfy the following format. 
 // start of instruction pair i, not including this line.
 ###
 i.
@@ -61,7 +50,7 @@ i.
 [verbal] {verbal output}
 [action] {list of function output}
 // end of instruction pair i, not including this line.
-2. The index of instructions for different tasks are continous. For example, if the last instruction for task 1 is 5, the first instruction data for task 2 should be 6.
+2. The index of instructions starts from 1. Index for different tasks are continous. For example, if the last instruction for task 1 is 5, the first instruction data for task 2 should be 6.
 3. The format of {instruction}: It's usually one of the questions listed above.
 4. The format of {input} will be a vector of robot observation, followed by a list of historical information. Use actual numbers in the vectors. The format is: 
 Current:\n[observation]\nPast:\n[hist text 1] [hist action list 1] [hist obs list 1]\n[hist text 2] [hist action list 2] [hist obs list 2]\n ...
@@ -69,8 +58,20 @@ Current:\n[observation]\nPast:\n[hist text 1] [hist action list 1] [hist obs lis
 5. The format of {verbal output} will be a sentence explain the current reasoning process and the current planned action. It is used for in-context learning for multi-turn instructions.
 6. The format of {action output} will be list of {function name} {function parameter} wrapped by []. Each element should be in a python executable form, don't use placeholders as parameters, output the numbers if the parameters are vectors.
 7. Each instruction pair should be separated by a line of "###" at the beginning.
-8. For each task in the task list, generate the multiple rounds of instructions from initial until the task is solved. At some steps, if there are multiple possible feecback observations, generate multiple data pairs with corresponding observations.
-Generate instructions for task 1 first, then task 2, ..., task N. 
-Each task should have at most 10 instruction pairs. Don't stop generating instructions until all the tasks listed are covered.
+8. For each task in the task list, generate the multiple rounds of instructions from initial until the task is solved. 
 
-Examples of instruction pairs for a single turn are given below. Note that this could be instructions under different {TASK}s in different rounds. You need to modify the instruction pairs according to the {TASK}.
+[Tasks to solve]
+Below is the list of {TASK}s used in the generated instructions:
+{TASK_LIST_PLACEHOLDER}
+
+[Function Lists in skill library]
+{FUNCTION_LIST_PLACEHOLDER}
+
+[Example observations]
+Below is some example observations when executing some skills. Use them as reference for observations when generating instructions.
+{TRAJECTORY_PLACEHOLDER}
+
+[Example instruction pairs]
+Below is some example instruction pairs. Use them as reference when generating instructions.
+{INSTRUCTION_EXAMPLE_PLACEHOLDER}
+Ignore the index in the example and start from 1. for the tasks in TASK list. Do not stop generating until all the tasks are covered.
