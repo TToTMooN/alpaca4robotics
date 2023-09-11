@@ -138,3 +138,5 @@ subtask_data/
 regen.json
 task_regen.json
 instruct_regen.json
+
+openai_key.json
